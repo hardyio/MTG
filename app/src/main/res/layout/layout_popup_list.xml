@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:overScrollMode="never"
+    android:background="@drawable/bg_corner_top_dialog"
+    android:padding="5dp">
+    
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:overScrollMode="never"
+        android:id="@+id/mRecyclerView"
+        tools:itemCount="6"
+        tools:listitem="@layout/base_popup_item_list"
+        android:scrollbars="none" />
+    
+</RelativeLayout>

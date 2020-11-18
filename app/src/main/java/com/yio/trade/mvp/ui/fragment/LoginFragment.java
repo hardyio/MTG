@@ -1,0 +1,281 @@
+package com.yio.trade.mvp.ui.fragment;
+
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatEditText;
+import androidx.appcompat.widget.AppCompatTextView;
+
+import com.google.android.material.textfield.TextInputLayout;
+import com.jess.arms.base.BaseFragment;
+import com.yio.mtg.trade.R;
+import com.jess.arms.di.component.AppComponent;
+import com.jess.arms.integration.EventBusManager;
+import com.jess.arms.utils.ArmsUtils;
+import com.yio.trade.common.AppConfig;
+import com.yio.trade.common.Const;
+import com.yio.trade.model.User;
+import com.yio.trade.mvp.contract.LoginContract;
+import com.yio.trade.mvp.presenter.LoginPresenter;
+import com.yio.trade.mvp.ui.activity.MainActivity;
+
+import org.simple.eventbus.Subscriber;
+
+import javax.inject.Inject;
+
+import butterknife.BindView;
+import butterknife.OnClick;
+import com.yio.trade.di.component.DaggerLoginComponent;
+import com.yio.trade.event.Event;
+
+import pers.zjc.commonlibs.util.BarUtils;
+import pers.zjc.commonlibs.util.FragmentUtils;
+import pers.zjc.commonlibs.util.KeyboardUtils;
+import pers.zjc.commonlibs.util.ScreenUtils;
+import pers.zjc.commonlibs.util.StringUtils;
+import pers.zjc.commonlibs.util.ToastUtils;
+
+import static com.jess.arms.utils.Preconditions.checkNotNull;
+
+public class LoginFragment extends BaseFragment<LoginPresenter> implements LoginContract.View {
+
+    @BindView(R.id.ivLogo)
+    ImageView ivLogo;
+    @BindView(R.id.etUserName)
+    AppCompatEditText etUserName;
+    @BindView(R.id.etPassword)
+    AppCompatEditText etPassword;
+    @BindView(R.id.btLogin)
+    AppCompatButton btLogin;
+    @BindView(R.id.tvToRegister)
+    AppCompatTextView tvToRegister;
+    @BindView(R.id.tilUser)
+    TextInputLayout tilUser;
+    @BindView(R.id.tilPassword)
+    TextInputLayout tilPassword;
+    @Inject
+    LoginPresenter loginPresenter;
+    AppConfig appConfig;
+    private int scrollToPosition;
+    private boolean isScrolled;
+    private View mRootView;
+    private MainActivity mActivity;
+
+    public static LoginFragment newInstance() {
+        LoginFragment fragment = new LoginFragment();
+        return fragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof MainActivity) {
+            mActivity = (MainActivity)context;
+        }
+    }
+
+    @Override
+    public void setupFragmentComponent(@NonNull AppComponent appComponent) {
+        DaggerLoginComponent //如找不到该类,请编译一下项目
+                             .builder().appComponent(appComponent).view(this).build().inject(this);
+    }
+
+    @Override
+    public View initView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                         @Nullable Bundle savedInstanceState) {
+        if (mRootView == null) {
+            mRootView = inflater.inflate(R.layout.fragment_login, container, false);
+        }
+        return mRootView;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        /**
+         * fragment点击穿透解决办法，从事件分发的角度来解决。
+         */
+        view.setClickable(true); //把View的click属性设为true，截断点击时间段扩散
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        appConfig = AppConfig.getInstance();
+        etUserName.setText(TextUtils.isEmpty(appConfig.getAccount()) ? "" : appConfig.getAccount());
+        etPassword.setText(TextUtils.isEmpty(appConfig.getPassword()) ? "" : appConfig.getPassword());
+        setListener();
+    }
+
+
+
+    @OnClick(R.id.btLogin)
+    public void login(View view) {
+        KeyboardUtils.hideSoftInput(view);
+        String userName = etUserName.getText().toString();
+        String password = etPassword.getText().toString();
+        if (StringUtils.isEmpty(userName)) {
+            tilUser.setError("请输入账号");
+            tilUser.setErrorEnabled(true);
+            return;
+        } else {
+            tilUser.setError("");
+            tilUser.setErrorEnabled(false);
+        }
+        if (StringUtils.isEmpty(password)) {
+            tilPassword.setError("请输入密码");
+            tilPassword.setErrorEnabled(true);
+            return;
+        }
+        else {
+            tilPassword.setError("");
+            tilPassword.setErrorEnabled(false);
+        }
+        loginPresenter.login(userName, password);
+    }
+
+    @OnClick(R.id.tvToRegister)
+    public void onRegClick(View view) {
+        KeyboardUtils.hideSoftInput(view);
+        SignupFragment signupFragment = SignupFragment.newInstance();
+        mActivity.switchFragment(signupFragment);
+    }
+
+    @Override
+    public void initData(@Nullable Bundle savedInstanceState) {
+//        configKeyboardEvent();
+    }
+
+    private void configKeyboardEvent() {
+        KeyboardUtils.registerSoftInputChangedListener(getActivity(), keyboardHeight -> {
+            // 顶层父布局
+            scrollToPosition = 0;
+            mRootView.postDelayed(() -> {
+                int[] loc = new int[2];
+                // 获取View左上顶点在屏幕中的绝对位置.(屏幕范围包括状态栏).
+                tvToRegister.getLocationOnScreen(loc);
+                int triggerToBtm = ScreenUtils.getScreenHeight() - loc[1] - tvToRegister.getHeight();
+                if(triggerToBtm < keyboardHeight) {
+                    // 输入框距离底部高度小于键盘高度，被遮挡，布局整体上移被遮挡的高度
+                    scrollToPosition = keyboardHeight - triggerToBtm;
+                    int navBarHeight = BarUtils.getNavBarHeight();
+                    boolean navBarVisible = BarUtils.isNavBarVisible(getActivity().getWindow());
+                    if(navBarVisible) {
+                        // 底部导航栏显示时，加上导航栏高度
+                        scrollToPosition += navBarHeight;
+                    }
+                    mRootView.scrollTo(0, scrollToPosition);
+                    isScrolled = true;
+                } else {
+                    scrollToPosition = 0;
+                }
+            }, 10);
+            // 软键盘消失，复原布局
+            if (keyboardHeight == 0) {
+                mRootView.scrollTo(0, 0);
+            }
+        });
+    }
+
+    private void setListener() {
+        etUserName.setOnFocusChangeListener((v, hasFocus) -> {
+            if (etUserName == null) {
+                return;
+            }
+            if (!hasFocus && etUserName.getText()!= null && StringUtils.isEmpty(etUserName.getText().toString())) {
+                tilUser.setError(getResources().getString(R.string.error_no_account));
+                tilUser.setErrorEnabled(true);
+            } else {
+                tilUser.setError("");
+                tilUser.setErrorEnabled(false);
+            }
+        });
+        etPassword.setOnFocusChangeListener((v, hasFocus) -> {
+            if (etPassword == null) {
+                return;
+            }
+            if (!hasFocus && null != etPassword.getText() && StringUtils.isEmpty(etPassword.getText().toString())) {
+                tilPassword.setError(getResources().getString(R.string.error_no_password));
+                tilPassword.setErrorEnabled(true);
+            } else {
+                tilPassword.setError("");
+                tilPassword.setErrorEnabled(false);
+            }
+        });
+    }
+
+    @Override
+    public void setData(@Nullable Object data) {
+
+    }
+
+    @Override
+    public void showLoading() {
+
+    }
+
+    @Override
+    public void hideLoading() {
+
+    }
+
+    @Override
+    public void showMessage(@NonNull String message) {
+        checkNotNull(message);
+        ToastUtils.showShort(message);
+    }
+
+    @Override
+    public void launchActivity(@NonNull Intent intent) {
+        checkNotNull(intent);
+        ArmsUtils.startActivity(intent);
+    }
+
+    @Override
+    public void killMyself() {
+
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onDestroy() {
+        back();
+        super.onDestroy();
+    }
+
+    @Override
+    public void loginSuccess() {
+        if (getFragmentManager() != null) {
+            back();
+            EventBusManager.getInstance().post(new Event<>(Const.EventCode.LOGIN_SUCCESS, null));
+        }
+    }
+
+    private void back() {
+        if (getFragmentManager() != null) {
+            FragmentUtils.pop(getFragmentManager(), true);
+        }
+        EventBusManager.getInstance().post(new Event<>(Const.EventCode.LOGIN_RETURN, null));
+    }
+
+    @Subscriber
+    public void onSignUpAndLoginSuccess(Event<User> event) {
+        if (event != null && event.getEventCode() == Const.EventCode.SIGN_SUCCESS) {
+            User user = event.getData();
+            loginPresenter.login(user.getUsername(), user.getPassword());
+        }
+    }
+
+}

@@ -1,0 +1,244 @@
+package com.yio.trade.mvp.ui.fragment;
+
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ProgressBar;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.jess.arms.base.BaseFragment;
+import com.yio.mtg.trade.R;
+import com.jess.arms.di.component.AppComponent;
+import com.jess.arms.utils.ArmsUtils;
+import com.yio.trade.common.AppConfig;
+import com.yio.trade.common.Const;
+import com.yio.trade.model.Article;
+import com.yio.trade.model.ArticleInfo;
+import com.yio.trade.mvp.contract.SearchResultContract;
+import com.yio.trade.mvp.presenter.SearchResultPresenter;
+import com.yio.trade.mvp.ui.activity.SearchActivity;
+import com.yio.trade.mvp.ui.activity.WebActivity;
+import com.yio.trade.mvp.ui.adapter.ArticleAdapter;
+import com.yio.trade.utils.RvScrollTopUtils;
+import com.yio.trade.utils.WrapContentLinearLayoutManager;
+
+import org.simple.eventbus.Subscriber;
+
+import java.util.ArrayList;
+
+import butterknife.BindView;
+import com.yio.trade.di.component.DaggerSearchResultComponent;
+import com.yio.trade.event.Event;
+
+import pers.zjc.commonlibs.util.ToastUtils;
+
+import static com.jess.arms.utils.Preconditions.checkNotNull;
+
+public class SearchResultFragment extends BaseFragment<SearchResultPresenter>
+        implements SearchResultContract.View, SearchActivity.OnSearchListener {
+
+    @BindView(R.id.mRecyclerView)
+    RecyclerView mRecyclerView;
+    @BindView(R.id.progressBar)
+    ProgressBar progressBar;
+    @BindView(R.id.fabTop)
+    FloatingActionButton fabTop;
+    private String mSearchKey;
+    private ArticleAdapter adapter;
+    private int page;
+    private int pageCount = -1;
+    private SearchActivity searchActivity;
+
+    public static SearchResultFragment newInstance() {
+        return new SearchResultFragment();
+    }
+
+    @Override
+    public void setupFragmentComponent(@NonNull AppComponent appComponent) {
+        DaggerSearchResultComponent //如找不到该类,请编译一下项目
+                                    .builder()
+                                    .appComponent(appComponent)
+                                    .view(this)
+                                    .build()
+                                    .inject(this);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.searchActivity = (SearchActivity)context;
+    }
+
+    @Override
+    public View initView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                         @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_search_result, container, false);
+    }
+
+    @Override
+    public void initData(@Nullable Bundle savedInstanceState) {
+        if (searchActivity != null) {
+            searchActivity.setOnSearchListener(this);
+        }
+        setupView();
+    }
+
+    private void setupView() {
+        assert mPresenter != null;
+        mRecyclerView.setLayoutManager(new WrapContentLinearLayoutManager(mContext));
+        adapter = new ArticleAdapter(new ArrayList<>(), ArticleAdapter.TYPE_COMMON);
+        loadAnimation(AppConfig.getInstance().getRvAnim());
+        mRecyclerView.setAdapter(adapter);
+        adapter.setOnItemClickListener((adapter, view, position) -> switchToWebPage(position));
+        adapter.setOnLoadMoreListener(() -> {
+            if (pageCount != 0 && pageCount == page + 1) {
+                adapter.loadMoreEnd();
+                return;
+            }
+            page++;
+            mPresenter.search(page, mSearchKey, false);
+        }, mRecyclerView);
+        adapter.setLikeListener(new ArticleAdapter.LikeListener() {
+            @Override
+            public void liked(Article item, int adapterPosition) {
+                mPresenter.collectArticle(item, adapterPosition);
+            }
+
+            @Override
+            public void unLiked(Article item, int adapterPosition) {
+                mPresenter.collectArticle(item, adapterPosition);
+            }
+        });
+        fabTop.show();
+        fabTop.setOnClickListener(v -> RvScrollTopUtils.smoothScrollTop(mRecyclerView));
+    }
+
+    private void switchToWebPage(int position) {
+        Intent intent = new Intent(mContext, WebActivity.class);
+        Article article = adapter.getData().get(position);
+        intent.putExtra(Const.Key.KEY_WEB_PAGE_TYPE, WebActivity.TYPE_ARTICLE);
+        intent.putExtra(Const.Key.KEY_WEB_PAGE_DATA, article);
+        launchActivity(intent);
+    }
+
+    @Override
+    public void setData(@Nullable Object data) {
+
+    }
+
+    @Override
+    public void showLoading() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideLoading() {
+        progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showMessage(@NonNull String message) {
+        checkNotNull(message);
+        ToastUtils.showShort(message);
+    }
+
+    @Override
+    public void launchActivity(@NonNull Intent intent) {
+        checkNotNull(intent);
+        ArmsUtils.startActivity(intent);
+    }
+
+    @Override
+    public void killMyself() {
+        searchActivity.showSearchFragment();
+    }
+
+    @Override
+    public void onSearch(String key) {
+        searchActivity.showResultFragment();
+        if (isAdded() && getUserVisibleHint()) {
+            mSearchKey = key;
+            assert mPresenter != null;
+            mPresenter.search(0, key, true);
+        }
+    }
+
+    @Override
+    public void showEmpty() {
+        showMessage("暂无数据");
+    }
+
+    @Override
+    public void showData(ArticleInfo data, boolean refresh) {
+        if (pageCount == -1) {
+            this.pageCount = data.getPageCount();
+        }
+        if (data.getDatas().isEmpty()) {
+            adapter.loadMoreEnd();
+        } else {
+            if (data.getCurPage() == 1) {
+                adapter.replaceData(data.getDatas());
+            } else {
+                adapter.addData(data.getDatas());
+                adapter.loadMoreComplete();
+            }
+        }
+    }
+
+    @Override
+    public void updateCollectStatus(boolean collect, Article item, int position) {
+        for (Article article : adapter.getData()) {
+            if (article.equals(item)) {
+                article.setCollect(collect);
+            }
+        }
+        adapter.notifyItemChanged(position);
+    }
+
+    @Subscriber
+    public void onAnimChanged(Event event) {
+        if (null != event && event.getEventCode() == Const.EventCode.CHANGE_RV_ANIM) {
+            Integer animType = (Integer)event.getData();
+            if (animType != null && animType > 0) {
+                loadAnimation(animType);
+            }
+        }
+    }
+
+    @Subscriber
+    public void onArticleCollected(Event<Article> event) {
+        if (null == event) {
+            return;
+        }
+        if (event.getEventCode() == Const.EventCode.COLLECT_ARTICLE) {
+            Article article = event.getData();
+            for (Article item : adapter.getData()) {
+                if (article.getId() == item.getId()) {
+                    item.setCollect(article.isCollect());
+                }
+            }
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    private void loadAnimation(int type) {
+        adapter.openLoadAnimation(type);
+    }
+
+    @Override
+    public void onCollectSuccess(Article article, int position) {
+
+    }
+
+    @Override
+    public void onCollectFail(Article article, int position) {
+        adapter.restoreLike(position);
+    }
+}

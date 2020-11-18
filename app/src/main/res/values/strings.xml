@@ -1,0 +1,218 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="facebook_app_id">681949099128718</string>
+    <string name="app_name" tools:ignore="PrivateResource">MTG Trade</string>
+    <!--button-->
+    <string name="bt_login">Login</string>
+    <string name="bt_signup">Register</string>
+    <string name="bt_commit">Submit</string>
+    <!--textView-->
+    <string name="tv_to_register">—New Member?Register Now—</string>
+    <!--welcome words-->
+    <string name="tv_welcome"/>
+    <!--hint-->
+    <string name="hint_account">Username</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_password_confirm">Confirm password</string>
+    <string name="error_no_account">Input username</string>
+    <string name="error_no_password">Input password</string>
+    <string name="error_confirm_password">Password entered twice is different</string>
+    <string name="back_tips">Tap again to exit</string>
+    <string name="hint_search_articles"></string>
+    <string name="hint_user_name">Login</string>
+    <string name="hint_level">level:17</string>
+    <string name="hint_integral">integral:549</string>
+    <string name="hint_id">id:12331</string>
+    <string name="hint_rank">rank:20</string>
+    <!-- response_error -->
+    <string name="network_unavailable_tip">Network unavailable!</string>
+    <string name="error_fail_to_connect">Connect fail</string>
+    <string name="error_login_expired">Please Login</string>
+    <string name="error_connect_time_out">Connect timeout</string>
+    <string name="error_socket_time_out">Server timeout</string>
+    <string name="error_server_error">Server error</string>
+    <string name="error_parse">Data parse error</string>
+    <string name="error_unknown">Unknown error</string>
+    
+    <!-- bottom title -->
+    <string name="title_home">Home</string>
+    <string name="title_wenda">News</string>
+    <string name="title_public">Brokers</string>
+    <string name="title_structure">Structure</string>
+    <string name="title_nav">nav</string>
+    <string name="title_project">project</string>
+
+    <!-- article -->
+    <string name="art_author">author</string>
+    <string name="art_date">2019–08–02</string>
+    <string name="art_title">This is title</string>
+    <string name="art_desc">Desc</string>
+    <string name="art_type"></string>
+    
+    <!-- article tags -->
+    <string name="article_tag_top">Top</string>
+    <string name="article_tag_new">New</string>
+    <string name="article_tag_qa">Question</string>
+    
+    <!-- description-->
+    <string name="toolbar_more">More</string>
+    
+    <!-- search -->
+    <string name="search_hot">Hot</string>
+    <string name="search_his">History</string>
+    
+    <!--  dialog  -->
+    <string name="dialog_clear_history">Are you sure to clear history?</string>
+    
+    <!-- drawerMenu -->
+    <string name="drawer_ranking">My ranking</string>
+    <string name="drawer_collection">My collection</string>
+    <string name="drawer_share">My share</string>
+    <string name="drawer_todo">TODO</string>
+    <string name="drawer_settings">Setting</string>
+    <string name="drawer_about_us">Abount us</string>
+    <string name="drawer_logout">Logout</string>
+    <string name="navi_todo">TODO</string>
+    
+    <string name="hint_date">2020&#8211;11&#8211;1</string>
+    <string name="hint_todo_title">Title</string>
+    <string name="hint_todo_content">Content</string>
+    <string name="hint_todo_deadline">Deadline</string>
+    <string name="hint_todo_priority">Priority</string>
+    <string name="hint_is_important">Important</string>
+    
+    <string name="long_text">hint_todo_contenthint_todo_contenthint_todo_contenthint_todo_contenthint_todo_contenthint_todo_contenthint_todo_contenthint_todo_contenthint_todo_contenthint_todo_contenthint_todo_contenthint_todo_contenthint_todo_contenthint_todo_contenthint_todo_content/hint_todo_content</string>
+    
+    <string name="title_warm_tips">Tips</string>
+    <string name="tip_unsave">Are you sure to logout?</string>
+    
+    <!-- todoMenu -->
+    <string name="mark_delete">Delete</string>
+    <string name="mark_done">Done</string>
+    <string name="mark_unDone">UnDone</string>
+    <string name="mark_important">Important</string>
+    <string name="drawer_open">Open Drawer</string>
+    <string name="drawer_close">Close Drawer</string>
+    
+    <string name="share_tips"></string>
+    
+    <string name="article_title">Article tile</string>
+    <string name="refresh_title">Refresh article</string>
+    <string name="article_link">Article Link</string>
+    <string name="open_link">Open link</string>
+    <string name="text_limit_100">Limit 100</string>
+    <string name="eg_article_link"></string>
+    
+    <string name="status_error">Status error</string>
+    <string name="status_empty">Status empty</string>
+    <string name="status_loading">Status loading</string>
+    <string name="status_network">Status network</string>
+    
+    <string name="choose_image_sourse">Choose image</string>
+    <string name="camera">camera</string>
+    <string name="album">album</string>
+    <string name="make_money">Make Money</string>
+    <string name="orders">Orders</string>
+    <string name="my">My</string>
+    <string name="balance">Balance</string>
+    <string name="freeze">Freeze</string>
+    <string name="bonus_today">Bonus Today</string>
+    <string name="bonus_sum">Bonus Sum</string>
+    <string name="add_cash">Add Cash</string>
+    <string name="start">Start</string>
+    <string name="add_payment_method">Add payment method</string>
+    <string name="upi">UPI</string>
+    <string name="please_enter_the_account_info">Please enter the account info:</string>
+    <string name="upi_id_vpa">UPI ID/VPA</string>
+    <string name="bank_account">Bank Account</string>
+    <string name="ifs_code">IFS Code</string>
+    <string name="upi_id_vpa_qr_code">UPI ID/VPA QR Code</string>
+    <string name="confirm">Confirm</string>
+    <string name="enter_amount">Enter Amount</string>
+    <string name="payment_guide">payment guide</string>
+    <string name="searching_for_orders">Searching for Orders...</string>
+    <string name="stop">Stop</string>
+    <string name="available_orders">Available orders</string>
+    <string name="amount">Amount</string>
+    <string name="bonus_after_confim">Bonus after confim</string>
+    <string name="accept">Accept</string>
+    <string name="waiting_to_be_confirmed">Waiting to be confirmed</string>
+    <string name="i_got_it">I Got it</string>
+    <string name="already_been_taken_away_by_others">Already been taken away by others</string>
+    <string name="to_be_confirmed">To be confirmed</string>
+    <string name="history">History</string>
+    <string name="copy">Copy</string>
+    <string name="remark">Remark</string>
+    <string name="confirm_the_payment">Confirm the payment</string>
+    <string name="appeal">Appeal</string>
+    <string name="please_confirm_order_as_soon_as_possible">Please confirm order as soon as possible</string>
+    <string name="check_details">Check Details</string>
+    <string name="system_remind">System Remind</string>
+    <string name="already_got_transfer_proof">Already got transfer proof</string>
+    <string name="order_details">Order Details</string>
+    <string name="system_reminder">System Reminder</string>
+    <string name="remind_time">Remind Time</string>
+    <string name="content">Content</string>
+    <string name="proof">Proof</string>
+    <string name="order_info">Order Info</string>
+    <string name="payment_account">Payment Account</string>
+    <string name="ifsc_code">IFSC CODE</string>
+    <string name="click_to_view">click to view</string>
+    <string name="select_appeal_type">Select Appeal Type</string>
+    <string name="haven_t_got_payment_please_cancel">Haven\'t got payment ,please cancel</string>
+    <string name="wrong_payment_amount">Wrong payment amount</string>
+    <string name="submit_appeal">Submit Appeal</string>
+    <string name="appealing">Appealing</string>
+    <string name="check_appeal_details">Check Appeal Details</string>
+    <string name="revoke_appeal">Revoke Appeal</string>
+    <string name="approved">Approved</string>
+    <string name="cancel_time">Cancel time</string>
+    <string name="appealed">Appealed</string>
+    <string name="payment_method">Payment Method</string>
+    <string name="withdraw">Withdraw</string>
+    <string name="settings">Settings</string>
+    <string name="contact_us">Contact Us</string>
+    <string name="guide">Guide</string>
+    <string name="logout">logout</string>
+    <string name="my_payment_method">My Payment Method</string>
+    <string name="save">SAVE</string>
+    <string name="successful">Successful</string>
+    <string name="failed">Failed</string>
+    <string name="in_progress">In Progress</string>
+    <string name="add_cash_successfully">Add Cash Successfully</string>
+    <string name="withdraw_record">Withdraw Record</string>
+    <string name="withdrawable">Withdrawable</string>
+    <string name="withdrawal_account">withdrawal account</string>
+    <string name="withdraw_amount">Withdraw Amount</string>
+    <string name="payout_service_time">Payout Service : Monday-Friday 8:00 am - 16:30 pm</string>
+    <string name="change_password">Change Password</string>
+    <string name="old_password">Old password</string>
+    <string name="new_password">New password</string>
+    <string name="confirm_new_password">Confirm New password</string>
+    <string name="change">Change</string>
+    <string name="changed_successfully">Changed Successfully</string>
+    <string name="registration">Registration</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="verification_code">Verification Code</string>
+    <string name="send">Send</string>
+    <string name="next">Next</string>
+    <string name="already_a_member_login">Already a member? Login</string>
+    <string name="user_name">User Name</string>
+    <string name="set_password">Set Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="register">Register</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="forgot_password">forgot password?</string>
+    <string name="new_member_register_now">New Member? Register Now</string>
+
+    <string name="android_web_agent">ANDROID_AGENT_NATIVE/2.0&#8194;%1$s</string>
+
+    <string name="msg_token_fmt" translatable="false">FCM registration Token: %s</string>
+    <string name="default_notification_channel_id">fcm_default_channel</string>
+    <string name="fcm_message">FCM Message</string>
+    <!-- [START fcm_default_icon_string] -->
+    <string name="default_notification_channel_name" translatable="true">Weather</string>
+    <!-- [END fcm_default_icon_string] -->
+    <string name="msg_subscribed">Subscribed to weather topic</string>
+    <string name="msg_subscribe_failed">Failed to subscribe to weather topic</string>
+</resources>

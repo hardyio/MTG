@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/base_bg_color"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <include layout="@layout/include_toolbar" />
+
+        <com.flyco.tablayout.SlidingTabLayout
+            android:id="@+id/tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@color/colorPrimary"
+            android:minHeight="45dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:tl_indicator_color="@color/base_bg_color"
+            app:tl_indicator_margin_bottom="@dimen/dp_5"
+            app:tl_tab_padding="@dimen/dp_10"
+            app:tl_textsize="@dimen/sp_14" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabTop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="10dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:src="@drawable/ic_arrow_upward"
+        app:borderWidth="0dp"
+        app:elevation="@dimen/dp_4"
+        app:layout_behavior="com.yio.trade.widgets.behavior.FloatingActionBarBehavior"
+        app:pressedTranslationZ="@dimen/dp_10"
+        app:rippleColor="@color/colorPrimaryDark" />
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
