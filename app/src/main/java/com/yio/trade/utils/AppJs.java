@@ -12,16 +12,23 @@ import android.webkit.WebView;
 
 import androidx.annotation.NonNull;
 
+import com.blankj.utilcode.util.SPUtils;
 import com.facebook.appevents.AppEventsLogger;
+import com.google.android.gms.ads.identifier.AdvertisingIdClient;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.yio.trade.mvp.ui.activity.PureWebActivity;
 import com.yio.trade.mvp.ui.activity.WebActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 
-import pers.zjc.commonlibs.util.SPUtils;
+import io.branch.referral.util.BranchEvent;
 
 public class AppJs {
     private Context context;
@@ -46,6 +53,7 @@ public class AppJs {
 
     /**
      * 获取个推设备id
+     * 传空串就行
      */
     @JavascriptInterface
     public String takePushId() {
@@ -70,23 +78,35 @@ public class AppJs {
         return "google";
     }
 
-//    /**
-//     * 获取ANDROID_ID
-//     */
-//    @JavascriptInterface
-//    public String getGoogleId() {
-//        //TODO
-//    }
-//
-//    /**
-//     * 集成branch包的时候已经带有Google Play Service核心jar包
-//     * 获取gpsadid 谷歌广告id
-//     */
-//    @JavascriptInterface
-//    public String getGaId() {
-//        //TODO
-//    }
-//
+    /**
+     * 获取ANDROID_ID
+     * public static final String ANDROID_ID
+     */
+    @JavascriptInterface
+    public String getGoogleId() {
+        return DeviceIdUtil.getAndroidId(context);
+    }
+
+    /**
+     * 集成branch包的时候已经带有Google Play Service核心jar包
+     * 获取gpsadid 谷歌广告id
+     * AdvertisingIdClient.getAdvertisingIdInfo() 异步方法
+     */
+    @JavascriptInterface
+    public String getGaId() {
+        try {
+            AdvertisingIdClient.Info advertisingIdInfo = AdvertisingIdClient.getAdvertisingIdInfo(context);
+            return advertisingIdInfo.getId();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (GooglePlayServicesNotAvailableException e) {
+            e.printStackTrace();
+        } catch (GooglePlayServicesRepairableException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
 
     /**
      * 调取谷歌登录方法
@@ -105,7 +125,7 @@ public class AppJs {
      */
     @JavascriptInterface
     public void branchEvent(String eventName) {
-//        new BranchEvent(eventName).logEvent(context);
+        new BranchEvent(eventName).logEvent(context);
     }
 
     /**
@@ -116,22 +136,22 @@ public class AppJs {
      */
     @JavascriptInterface
     public void branchEvent(String eventName, String parameters) {
-//        try {
-//            BranchEvent branchEvent = new BranchEvent(eventName);
-//            JSONObject obj = null;
-//            obj = new JSONObject(parameters);
-//            Bundle bundle = new Bundle();
-//            Iterator<String> keys = obj.keys();
-//            while (keys.hasNext()) {
-//                String key = keys.next();
-//                String value = obj.optString(key);
-//                bundle.putString(key, value);
-//                branchEvent.addCustomDataProperty(key, value);
-//            }
-//            branchEvent.logEvent(context);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            BranchEvent branchEvent = new BranchEvent(eventName);
+            JSONObject obj = null;
+            obj = new JSONObject(parameters);
+            Bundle bundle = new Bundle();
+            Iterator<String> keys = obj.keys();
+            while (keys.hasNext()) {
+                String key = keys.next();
+                String value = obj.optString(key);
+                bundle.putString(key, value);
+                branchEvent.addCustomDataProperty(key, value);
+            }
+            branchEvent.logEvent(context);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -143,22 +163,22 @@ public class AppJs {
      */
     @JavascriptInterface
     public void branchEvent(String eventName, String parameters, String alias) {
-//        try {
-//            BranchEvent branchEvent = new BranchEvent(eventName);
-//            JSONObject obj = null;
-//            obj = new JSONObject(parameters);
-//            Bundle bundle = new Bundle();
-//            Iterator<String> keys = obj.keys();
-//            while (keys.hasNext()) {
-//                String key = keys.next();
-//                String value = obj.optString(key);
-//                bundle.putString(key, value);
-//                branchEvent.addCustomDataProperty(key, value);
-//            }
-//            branchEvent.setCustomerEventAlias(alias).logEvent(context);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            BranchEvent branchEvent = new BranchEvent(eventName);
+            JSONObject obj = null;
+            obj = new JSONObject(parameters);
+            Bundle bundle = new Bundle();
+            Iterator<String> keys = obj.keys();
+            while (keys.hasNext()) {
+                String key = keys.next();
+                String value = obj.optString(key);
+                bundle.putString(key, value);
+                branchEvent.addCustomDataProperty(key, value);
+            }
+            branchEvent.setCustomerEventAlias(alias).logEvent(context);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -251,7 +271,7 @@ public class AppJs {
                 String value = obj.optString(key);
                 bundle.putString(key, value);
             }
-//            FirebaseAnalytics.getInstance(context).logEvent(category, bundle);
+            FirebaseAnalytics.getInstance(context).logEvent(category, bundle);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -288,37 +308,38 @@ public class AppJs {
     }
 
     /**
-     * 是否存在交互方法
+     * AppJs是否存在交互方法 告诉H5是否存在传入的对应方法
      *
-     * @param name 方法名
+     * @param callbackMethod 回调给H5时调用的JavaScript方法
+     * @param name 需要查询AppJs中是否存在的方法
      */
     @JavascriptInterface
-    public boolean isContainsName(String callbackMethod, String name) {
+    public void isContainsName(String callbackMethod, String name) {
         boolean has = false;
         int length = classMethods.length;
         for (int i = 0; i < length; i++) {
-            classMethods[i].getName();
+            String methodName = classMethods[i].getName();
+            if (name.equals(methodName)) {
+                has = true;
+                break;
+            }
         }
-        //TODO 遍历提供的JS桥，获取是否含有传入的方法
         WebActivity webActivity = (WebActivity) this.context;
-        webActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                WebView webView = webActivity.getWebView();
-                String javascript = "javascript:" + callbackMethod + "()";
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-                    webView.loadUrl(javascript);
-                } else {
-                    webView.evaluateJavascript(javascript, new ValueCallback<String>() {
-                        @Override
-                        public void onReceiveValue(String value) {
-                            //此处为 js 返回的结果
-                        }
-                    });
-                }
+        boolean finalHas = has;
+        webActivity.runOnUiThread(() -> {
+            WebView webView = webActivity.getWebView();
+            String javascript = "javascript:" + callbackMethod + "(" + finalHas + ")";
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+                webView.loadUrl(javascript);
+            } else {
+                webView.evaluateJavascript(javascript, new ValueCallback<String>() {
+                    @Override
+                    public void onReceiveValue(String value) {
+                        //此处为 js 返回的结果
+                    }
+                });
             }
         });
-        return has;
     }
 
     /**
@@ -363,35 +384,43 @@ public class AppJs {
     }
 
     /**
-     * 打开一个基本配置的web url
+     * 打开一个基本配置的webview （不修改UA、不设置AppJs、可以缓存）
+     * 打开新页面
+     * 加载webview的情况分类(判断依据：url、postData、html)
+     * |-------1、只有url：webView.loadUrl()
+     * |-------2、有url和postData：webView.postUrl()
+     * |-------3、有html webView.loadDataWithBaseURL()
      *
-     * @param json 打开web传参 选填
-     *             {"title":"", 打开时显示的标题
+     * @param json 打开web传参
+     *             {"title":"", 标题
      *             "url":"", 加载的地址
-     *             "hasTitleBar":"false", 是否显示标题栏
-     *             "rewriteTitle":"true", 是否通过加载的Web重写标题
+     *             "hasTitleBar":false, 是否显示标题栏
+     *             "rewriteTitle":true, 是否通过加载的Web重写标题
      *             "stateBarTextColor":"black", 状态栏字体颜色 black|white
      *             "titleTextColor":"#FFFFFF", 标题字体颜色
-     *             "titleColor":"#FFFFFF", 标题背景色
-     *             "postData":"", webView post方法时需要传参
-     *             "html":"", 加载htmlCode,
-     *             "webBack":"true", true:web回退|false 直接关闭页面
+     *             "titleColor":"#FFFFFF", 状态栏和标题背景色
+     *             "postData":"", webView post方法时会用到
+     *             "html":"", 加载htmlCode（例如：<body></body>）,
+     *             "webBack":true, true:web回退(点击返回键webview可以回退就回退，无法回退的时候关闭该页面)|false(点击返回键关闭该页面) 直接关闭页面
      *             }
      */
     @JavascriptInterface
     public void openPureBrowser(String json) {
-        //TODO
+        Intent intent = new Intent(context, PureWebActivity.class);
+        intent.putExtra("json", json);
+        context.startActivity(intent);
     }
-//
-//    /**
-//     * 控制显示当前页面是否显示 TitleBar
-//     * （点击返回键webview 后退）
-//     *
-//     * @param visible
-//     */
-//    @JavascriptInterface
-//    public void showTitleBar(Boolean visible) {
-//        //TODO
-//    }
-//
+
+    /**
+     * 控制显示当前页面是否显示 TitleBar
+     * （点击返回键webview 后退）
+     *
+     * @param visible
+     */
+    @JavascriptInterface
+    public void showTitleBar(boolean visible) {
+        WebActivity webActivity = (WebActivity) this.context;
+        webActivity.showTitleBar(visible);
+    }
+
 }

@@ -16,6 +16,9 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 
+import com.blankj.utilcode.util.StringUtils;
+import com.blankj.utilcode.util.TimeUtils;
+import com.blankj.utilcode.util.ToastUtils;
 import com.gyf.immersionbar.ImmersionBar;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
@@ -35,10 +38,6 @@ import java.util.Date;
 import butterknife.BindView;
 import com.yio.trade.di.component.DaggerTodoEditComponent;
 import com.yio.trade.event.Event;
-
-import pers.zjc.commonlibs.util.StringUtils;
-import pers.zjc.commonlibs.util.TimeUtils;
-import pers.zjc.commonlibs.util.ToastUtils;
 
 import static com.jess.arms.utils.Preconditions.checkNotNull;
 

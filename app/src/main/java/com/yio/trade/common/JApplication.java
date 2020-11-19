@@ -12,6 +12,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.multidex.MultiDex;
 
+import com.blankj.utilcode.util.CrashUtils;
+import com.blankj.utilcode.util.SPUtils;
+import com.blankj.utilcode.util.Utils;
 import com.jess.arms.base.App;
 import com.jess.arms.base.BaseApplication;
 import com.jess.arms.base.delegate.AppDelegate;
@@ -33,13 +36,11 @@ import com.yio.trade.widgets.PoemHeader;
 
 import org.jetbrains.annotations.NotNull;
 
+import io.branch.referral.Branch;
 import me.jessyan.retrofiturlmanager.RetrofitUrlManager;
 
 import com.yio.trade.utils.TimberUtils;
 
-import pers.zjc.commonlibs.util.CrashUtils;
-import pers.zjc.commonlibs.util.SPUtils;
-import pers.zjc.commonlibs.util.Utils;
 import timber.log.Timber;
 
 public class JApplication extends BaseApp implements App{
@@ -111,9 +112,9 @@ public class JApplication extends BaseApp implements App{
 //        Branch.enableLogging();
 
         // Branch object initialization
-//        Branch.getAutoInstance(this);
-////        Branch.getInstance().setPreinstallCampaign("jeff_preinstall_test_campaign");   //campaign名称
-////        Branch.getInstance().setPreinstallPartner("jeff_fake_OEM"); //渠道名 如OPPO,、Huawei、小米
+        Branch.getAutoInstance(this);
+//        Branch.getInstance().setPreinstallCampaign("jeff_preinstall_test_campaign");   //campaign名称
+//        Branch.getInstance().setPreinstallPartner("jeff_fake_OEM"); //渠道名 如OPPO,、Huawei、小米
     }
 
     private void delayInit() {
@@ -129,7 +130,7 @@ public class JApplication extends BaseApp implements App{
                 // 开启 Debug 模式下可以打印网络请求日志
                 RetrofitUrlManager.getInstance().setDebug(true);
                 // 初始化sp
-                SPUtils.create(getApplicationContext(), "cookies_prefs");
+                SPUtils.getInstance("cookies_prefs");
                 CrashUtils.init();
             }
         }, 5000L);

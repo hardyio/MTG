@@ -12,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+import com.blankj.utilcode.util.FragmentUtils;
+import com.blankj.utilcode.util.ToastUtils;
 import com.jess.arms.base.BaseFragment;
 import com.yio.mtg.trade.R;
 import com.jess.arms.di.component.AppComponent;
@@ -19,9 +21,6 @@ import com.jess.arms.utils.ArmsUtils;
 import com.yio.trade.mvp.contract.SplashContract;
 import com.yio.trade.mvp.presenter.SplashPresenter;
 import com.yio.trade.mvp.ui.activity.MainActivity;
-
-import pers.zjc.commonlibs.util.FragmentUtils;
-import pers.zjc.commonlibs.util.ToastUtils;
 
 import static com.jess.arms.utils.Preconditions.checkNotNull;
 

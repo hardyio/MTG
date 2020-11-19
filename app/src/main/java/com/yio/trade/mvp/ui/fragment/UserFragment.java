@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.blankj.utilcode.util.FragmentUtils;
 import com.classic.common.MultipleStatusView;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -44,8 +45,6 @@ import com.yio.trade.di.component.DaggerUserComponent;
 
 import com.yio.trade.model.ArticleInfo;
 import com.yio.trade.mvp.ui.adapter.ArticleAdapter;
-
-import pers.zjc.commonlibs.util.FragmentUtils;
 
 import static com.jess.arms.utils.Preconditions.checkNotNull;
 
@@ -258,12 +257,10 @@ public class UserFragment extends BaseFragment<UserPresenter> implements UserCon
         }
     }
 
-    @Override
     public void showError(String msg) {
         statusView.showError(msg);
     }
 
-    @Override
     public void showNoNetwork() {
         statusView.showNoNetwork();
     }

@@ -1,10 +1,9 @@
 package com.yio.trade.common;
 
+import com.blankj.utilcode.util.SPUtils;
 import com.google.gson.Gson;
 
 import java.util.LinkedHashMap;
-
-import pers.zjc.commonlibs.util.SPUtils;
 
 public class TodoTypeHelper {
 

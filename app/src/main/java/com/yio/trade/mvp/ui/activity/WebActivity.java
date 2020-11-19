@@ -2,11 +2,14 @@ package com.yio.trade.mvp.ui.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.View;
 import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -16,12 +19,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 
+import com.blankj.utilcode.util.ToastUtils;
 import com.gyf.immersionbar.ImmersionBar;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
 import com.yio.mtg.trade.R;
 import com.yio.trade.common.Const;
+import com.yio.trade.di.component.DaggerWebComponent;
 import com.yio.trade.model.Article;
 import com.yio.trade.model.BannerImg;
 import com.yio.trade.mvp.contract.WebContract;
@@ -31,7 +36,6 @@ import com.yio.trade.utils.WebViewClient;
 import com.yio.trade.widgets.CustomWebView;
 
 import butterknife.BindView;
-import pers.zjc.commonlibs.util.ToastUtils;
 
 import static android.view.KeyEvent.KEYCODE_BACK;
 import static com.jess.arms.utils.Preconditions.checkNotNull;
@@ -68,8 +72,8 @@ public class WebActivity extends BaseActivity<WebPresenter> implements WebContra
 
     @Override
     public void setupActivityComponent(@NonNull AppComponent appComponent) {
-//        DaggerWebComponent //如找不到该类,请编译一下项目
-//                           .builder().appComponent(appComponent).view(this).build().inject(this);
+        DaggerWebComponent //如找不到该类,请编译一下项目
+                .builder().appComponent(appComponent).view(this).build().inject(this);
     }
 
     @Override
@@ -148,17 +152,17 @@ public class WebActivity extends BaseActivity<WebPresenter> implements WebContra
         tvTitle.setFocusable(true);
         tvTitle.setFocusableInTouchMode(true);
         tvTitle.setText(mTitle);
+        ivRight.setVisibility(View.GONE);
         ivRight.setImageResource(R.drawable.ic_more_vert);
         ivLeft.setOnClickListener(v -> killMyself());
-        ivRight.setOnClickListener(v -> showPopMenu());
-    }
-
-    private void showPopMenu() {
-
     }
 
     public CustomWebView getWebView() {
         return webView;
+    }
+
+    public void showTitleBar(boolean visible) {
+        runOnUiThread(() -> toolbar.setVisibility(visible ? View.VISIBLE : View.GONE));
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -254,4 +258,31 @@ public class WebActivity extends BaseActivity<WebPresenter> implements WebContra
     public void setBackPressJSMethod(String methodName) {
         this.jsMethodName = methodName;
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case CustomWebView.REQUEST_SELECT_FILE:
+                if (webView.uploadMessageArr == null)
+                    return;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    webView.uploadMessageArr.onReceiveValue(WebChromeClient.FileChooserParams.parseResult(resultCode, data));
+                }
+                webView.uploadMessageArr = null;
+                break;
+            case CustomWebView.FILECHOOSER_RESULTCODE:
+                if (null == webView.uploadMessage)
+                    return;
+                // Use MainActivity.RESULT_OK if you're implementing WebView inside Fragment
+                // Use RESULT_OK only if you're implementing WebView inside an Activity
+                Uri result = data == null || resultCode != RESULT_OK ? null : data.getData();
+                webView.uploadMessage.onReceiveValue(result);
+                webView.uploadMessage = null;
+                break;
+            default:
+                break;
+        }
+    }
+
 }

@@ -1,12 +1,11 @@
 package com.yio.trade.common;
 
+import com.blankj.utilcode.util.SPUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import pers.zjc.commonlibs.util.SPUtils;
 
 public class SearchHelper {
 

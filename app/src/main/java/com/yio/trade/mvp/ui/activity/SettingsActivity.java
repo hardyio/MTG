@@ -15,6 +15,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.blankj.utilcode.util.AppUtils;
+import com.blankj.utilcode.util.StringUtils;
 import com.gyf.immersionbar.ImmersionBar;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
@@ -44,8 +46,6 @@ import per.goweii.anylayer.DragLayout;
 import per.goweii.anylayer.Layer;
 import com.yio.trade.event.Event;
 
-import pers.zjc.commonlibs.util.AppUtils;
-import pers.zjc.commonlibs.util.StringUtils;
 import timber.log.Timber;
 
 import static com.jess.arms.utils.Preconditions.checkNotNull;

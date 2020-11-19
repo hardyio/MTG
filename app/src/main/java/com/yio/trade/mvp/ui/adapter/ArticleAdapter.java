@@ -4,6 +4,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 
+import com.blankj.utilcode.util.StringUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
@@ -18,7 +19,6 @@ import com.yio.trade.utils.JUtils;
 
 import java.util.List;
 
-import pers.zjc.commonlibs.util.StringUtils;
 import timber.log.Timber;
 
 public class ArticleAdapter extends BaseQuickAdapter<Article, BaseViewHolder> {

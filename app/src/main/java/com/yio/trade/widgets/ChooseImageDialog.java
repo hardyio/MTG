@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
+import com.blankj.utilcode.util.ToastUtils;
 import com.jess.arms.utils.PermissionUtil;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
@@ -23,7 +24,6 @@ import per.goweii.anylayer.Layer;
 
 import com.yio.mtg.trade.R;
 import com.yio.trade.utils.RxPhotoTool;
-import pers.zjc.commonlibs.util.ToastUtils;
 import timber.log.Timber;
 
 public class ChooseImageDialog {

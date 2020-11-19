@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.blankj.utilcode.constant.PermissionConstants;
 import com.blankj.utilcode.util.ImageUtils;
 import com.blankj.utilcode.util.PermissionUtils;
 import com.blankj.utilcode.util.StringUtils;
@@ -57,6 +58,7 @@ import com.yio.trade.mvp.ui.activity.WebActivity;
 import com.yio.trade.utils.RxPhotoTool;
 import com.yio.trade.utils.UIUtils;
 import com.yio.trade.utils.rx.RxScheduler;
+import com.yio.trade.utils.ui.BasePagerAdapter;
 import com.yio.trade.widgets.ChooseImageDialog;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -79,8 +81,6 @@ import me.jessyan.rxerrorhandler.core.RxErrorHandler;
 import com.yio.trade.di.component.DaggerContainerComponent;
 import com.yio.trade.event.Event;
 
-import pers.zjc.commonlibs.constant.PermissionConstants;
-import pers.zjc.commonlibs.ui.BasePagerAdapter;
 import timber.log.Timber;
 
 import static com.jess.arms.utils.Preconditions.checkNotNull;

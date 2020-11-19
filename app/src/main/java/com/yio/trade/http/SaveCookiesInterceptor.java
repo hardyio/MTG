@@ -3,6 +3,7 @@ package com.yio.trade.http;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.blankj.utilcode.util.StringUtils;
 import com.yio.trade.common.Const;
 
 import java.io.IOException;
@@ -13,7 +14,6 @@ import java.util.Set;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
-import pers.zjc.commonlibs.util.StringUtils;
 
 /**
  * 获取cookie拦截器，用于首次请求

@@ -4,6 +4,9 @@
     <color name="colorPrimaryDark">#0164f5</color>
     <color name="colorAccent">#FF4081</color>
     
+    <color name="black_dark">#1B1B1B</color>
+    <color name="gray_dark">#2F2D2E</color>
+    <color name="blue_light1">#0074A0</color>
     <!--custom-->
     <color name="base_bg_color">@color/white</color>
     <color name="base_item_tint">@color/gray</color>

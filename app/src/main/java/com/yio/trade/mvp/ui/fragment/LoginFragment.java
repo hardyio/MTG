@@ -15,6 +15,12 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatTextView;
 
+import com.blankj.utilcode.util.BarUtils;
+import com.blankj.utilcode.util.FragmentUtils;
+import com.blankj.utilcode.util.KeyboardUtils;
+import com.blankj.utilcode.util.ScreenUtils;
+import com.blankj.utilcode.util.StringUtils;
+import com.blankj.utilcode.util.ToastUtils;
 import com.google.android.material.textfield.TextInputLayout;
 import com.jess.arms.base.BaseFragment;
 import com.yio.mtg.trade.R;
@@ -37,12 +43,6 @@ import butterknife.OnClick;
 import com.yio.trade.di.component.DaggerLoginComponent;
 import com.yio.trade.event.Event;
 
-import pers.zjc.commonlibs.util.BarUtils;
-import pers.zjc.commonlibs.util.FragmentUtils;
-import pers.zjc.commonlibs.util.KeyboardUtils;
-import pers.zjc.commonlibs.util.ScreenUtils;
-import pers.zjc.commonlibs.util.StringUtils;
-import pers.zjc.commonlibs.util.ToastUtils;
 
 import static com.jess.arms.utils.Preconditions.checkNotNull;
 

@@ -11,12 +11,23 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 
+import com.blankj.utilcode.util.ActivityUtils;
+import com.blankj.utilcode.util.FragmentUtils;
+import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.SPUtils;
+import com.blankj.utilcode.util.ToastUtils;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.gyf.immersionbar.ImmersionBar;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
@@ -35,16 +46,15 @@ import com.yio.trade.utils.AppJs;
 import com.yio.trade.utils.MethodUtil;
 import com.yio.trade.utils.RouterHelper;
 
+import org.json.JSONObject;
 import org.simple.eventbus.Subscriber;
 
 import java.lang.reflect.Method;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import pers.zjc.commonlibs.util.ActivityUtils;
-import pers.zjc.commonlibs.util.FragmentUtils;
-import pers.zjc.commonlibs.util.LogUtils;
-import pers.zjc.commonlibs.util.ToastUtils;
+import io.branch.referral.Branch;
+import io.branch.referral.BranchError;
 import timber.log.Timber;
 
 import static com.jess.arms.utils.Preconditions.checkNotNull;
@@ -95,35 +105,27 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         //        cm.setSaturation(0);
         //        paint.setColorFilter(new ColorMatrixColorFilter(cm));
         //        getWindow().getDecorView().setLayerType(View.LAYER_TYPE_HARDWARE, paint);
-        ToastUtils.setGravity(Gravity.CENTER, 0, 0);
+        ToastUtils.getDefaultMaker().setGravity(Gravity.CENTER, 0, 0);
 
-//        FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-//            @Override
-//            public void onComplete(@NonNull Task<InstanceIdResult> task) {
-//                if (!task.isSuccessful()) {
-////                    Log.i("isFcm", "getInstanceId failed", task.getException());
-//                    return;
-//                }
-//
-//                // Get new Instance ID token
-//                String token = task.getResult().getToken();
-////                Log.i("FcmToken", token);
-//                SPUtils.getInstance().put("fcmToken", token);
-//            }
-//        });
-        MethodUtil methodUtil = new MethodUtil();
-        Method[] classMethods = methodUtil.getClassMethods(AppJs.class);
-        int length = classMethods.length;
-        for (int i = 0; i < length; i++) {
-            String name = classMethods[i].getName();
-            LogUtils.d("name=" + name);
-        }
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull Task<String> task) {
+                if (!task.isSuccessful()) {
+                    return;
+                }
+
+                // Get new Instance ID token
+                String token = task.getResult();
+//                Log.i("FcmToken", token);
+                SPUtils.getInstance().put("fcmToken", token);
+            }
+        });
     }
 
     @Override
     public void onStart() {
         super.onStart();
-//        Branch.sessionBuilder(this).withCallback(branchReferralInitListener).withData(getIntent() != null ? getIntent().getData() : null).init();
+        Branch.sessionBuilder(this).withCallback(branchReferralInitListener).withData(getIntent() != null ? getIntent().getData() : null).init();
     }
 
     @Override
@@ -132,15 +134,15 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         setIntent(intent);
         // if activity is in foreground (or in backstack but partially visible) launching the same
         // activity will skip onStart, handle this case with reInitSession
-//        Branch.sessionBuilder(this).withCallback(branchReferralInitListener).reInit();
+        Branch.sessionBuilder(this).withCallback(branchReferralInitListener).reInit();
     }
 
-//    private Branch.BranchReferralInitListener branchReferralInitListener = new Branch.BranchReferralInitListener() {
-//        @Override
-//        public void onInitFinished(JSONObject linkProperties, BranchError error) {
-//            // do stuff with deep link data (nav to page, display content, etc)
-//        }
-//    };
+    private Branch.BranchReferralInitListener branchReferralInitListener = new Branch.BranchReferralInitListener() {
+        @Override
+        public void onInitFinished(JSONObject linkProperties, BranchError error) {
+            // do stuff with deep link data (nav to page, display content, etc)
+        }
+    };
 
     private void setFullScreen(boolean isFullScreen) {
         setTheme(isFullScreen ? R.style.LaunchTheme : R.style.AppTheme);
@@ -169,7 +171,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
         mFragmentManager = getSupportFragmentManager();
-        RouterHelper.switchToWebPageWithUrl(this,"https://c1.mufg365.com/app_bridge.html","");
+        RouterHelper.switchToWebPageWithUrl(this,"https://c1.mufg365.com/app_bridge.html","Test");
     }
 
     /**

@@ -5,6 +5,8 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import com.blankj.utilcode.util.StringUtils;
+import com.blankj.utilcode.util.TimeUtils;
 import com.jess.arms.di.scope.FragmentScope;
 import com.jess.arms.integration.AppManager;
 import com.jess.arms.integration.EventBusManager;
@@ -30,8 +32,6 @@ import com.yio.trade.model.Todo;
 import com.yio.trade.model.TodoSection;
 import com.yio.trade.result.WanAndroidResponse;
 import com.yio.trade.utils.rx.RxScheduler;
-import pers.zjc.commonlibs.util.StringUtils;
-import pers.zjc.commonlibs.util.TimeUtils;
 
 /**
  * @author ZJC

@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.blankj.utilcode.util.FragmentUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.jess.arms.base.BaseFragment;
 import com.yio.mtg.trade.R;
@@ -43,7 +44,6 @@ import butterknife.BindView;
 import com.yio.trade.di.component.DaggerRankComponent;
 import com.yio.trade.event.Event;
 
-import pers.zjc.commonlibs.util.FragmentUtils;
 
 import static com.jess.arms.utils.Preconditions.checkNotNull;
 

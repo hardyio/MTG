@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.classic.common.MultipleStatusView;
 import com.jess.arms.base.BaseLazyLoadFragment;
@@ -50,7 +51,6 @@ import com.yio.trade.di.component.DaggerHomeComponent;
 import com.yio.trade.event.Event;
 import com.yio.trade.model.ArticleInfo;
 
-import pers.zjc.commonlibs.util.ToastUtils;
 import timber.log.Timber;
 
 import static com.jess.arms.utils.Preconditions.checkNotNull;
@@ -396,12 +396,10 @@ public class HomeFragment extends BaseLazyLoadFragment<HomePresenter>
         super.onSaveInstanceState(outState);
     }
 
-    @Override
     public void showError(String msg) {
         statusView.showError(msg);
     }
 
-    @Override
     public void showNoNetwork() {
 //        statusView.showNoNetwork();
         showMessage(JApplication.getInstance().getString(R.string.network_unavailable_tip));

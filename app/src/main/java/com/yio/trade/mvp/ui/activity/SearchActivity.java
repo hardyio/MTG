@@ -15,6 +15,9 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import com.blankj.utilcode.util.FragmentUtils;
+import com.blankj.utilcode.util.KeyboardUtils;
+import com.blankj.utilcode.util.StringUtils;
 import com.gyf.immersionbar.ImmersionBar;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
@@ -28,9 +31,6 @@ import butterknife.BindView;
 import com.yio.trade.mvp.ui.fragment.SearchHisFragment;
 import com.yio.trade.mvp.ui.fragment.SearchResultFragment;
 
-import pers.zjc.commonlibs.util.FragmentUtils;
-import pers.zjc.commonlibs.util.KeyboardUtils;
-import pers.zjc.commonlibs.util.StringUtils;
 
 /**
  * @author ZJC

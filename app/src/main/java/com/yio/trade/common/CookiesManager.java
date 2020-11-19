@@ -1,7 +1,6 @@
 package com.yio.trade.common;
 
-import pers.zjc.commonlibs.util.SPUtils;
-
+import com.blankj.utilcode.util.SPUtils;
 
 public class CookiesManager {
 

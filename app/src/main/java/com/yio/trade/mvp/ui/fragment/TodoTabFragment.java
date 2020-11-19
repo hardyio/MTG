@@ -20,6 +20,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.blankj.utilcode.util.FragmentUtils;
+import com.blankj.utilcode.util.ScreenUtils;
+import com.blankj.utilcode.util.ToastUtils;
 import com.flyco.tablayout.SlidingTabLayout;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -42,9 +45,6 @@ import butterknife.BindView;
 import per.goweii.anylayer.Align;
 import per.goweii.anylayer.AnyLayer;
 import per.goweii.anylayer.Layer;
-import pers.zjc.commonlibs.util.FragmentUtils;
-import pers.zjc.commonlibs.util.ScreenUtils;
-import pers.zjc.commonlibs.util.ToastUtils;
 
 import static com.jess.arms.utils.Preconditions.checkNotNull;
 

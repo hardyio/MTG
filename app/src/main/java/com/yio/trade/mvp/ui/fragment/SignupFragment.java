@@ -18,6 +18,8 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.Toolbar;
 
+import com.blankj.utilcode.util.StringUtils;
+import com.blankj.utilcode.util.ToastUtils;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.jess.arms.base.BaseFragment;
@@ -38,8 +40,6 @@ import com.yio.trade.di.component.DaggerSignupComponent;
 import com.yio.trade.event.Event;
 
 import butterknife.BindView;
-import pers.zjc.commonlibs.util.StringUtils;
-import pers.zjc.commonlibs.util.ToastUtils;
 
 import static com.jess.arms.utils.Preconditions.checkNotNull;
 

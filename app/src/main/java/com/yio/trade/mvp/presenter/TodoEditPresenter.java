@@ -2,6 +2,7 @@ package com.yio.trade.mvp.presenter;
 
 import android.app.Application;
 
+import com.blankj.utilcode.util.StringUtils;
 import com.jess.arms.integration.AppManager;
 import com.jess.arms.di.scope.ActivityScope;
 import com.jess.arms.mvp.BasePresenter;
@@ -19,7 +20,6 @@ import com.yio.trade.base.BaseWanObserver;
 import com.yio.trade.model.Todo;
 import com.yio.trade.result.WanAndroidResponse;
 import com.yio.trade.utils.rx.RxScheduler;
-import pers.zjc.commonlibs.util.StringUtils;
 
 @ActivityScope
 public class TodoEditPresenter

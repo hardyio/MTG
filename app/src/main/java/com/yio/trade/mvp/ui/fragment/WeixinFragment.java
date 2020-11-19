@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import com.blankj.utilcode.util.ToastUtils;
 import com.flyco.tablayout.SlidingTabLayout;
 import com.jess.arms.base.BaseLazyLoadFragment;
 import com.yio.mtg.trade.R;
@@ -32,7 +33,6 @@ import com.yio.trade.common.ScrollTopListener;
 import com.yio.trade.di.component.DaggerWeixinComponent;
 
 import com.yio.trade.mvp.ui.adapter.TabFragmentStatePagerAdapter;
-import pers.zjc.commonlibs.util.ToastUtils;
 
 import static com.jess.arms.utils.Preconditions.checkNotNull;
 

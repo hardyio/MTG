@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.StringUtils;
+import com.blankj.utilcode.util.ToastUtils;
 import com.flyco.tablayout.SlidingTabLayout;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -31,9 +33,7 @@ import butterknife.BindView;
 
 import com.yio.trade.common.ScrollTopListener;
 import com.yio.trade.mvp.ui.fragment.TabFragment;
-import pers.zjc.commonlibs.ui.BaseStatePagerAdapter;
-import pers.zjc.commonlibs.util.StringUtils;
-import pers.zjc.commonlibs.util.ToastUtils;
+import com.yio.trade.utils.ui.BaseStatePagerAdapter;
 
 public class TabActivity extends BaseActivity<TabPresenter> {
 

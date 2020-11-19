@@ -93,7 +93,7 @@ public class DeviceIdUtil {
      * @param context 上下文
      * @return 设备的AndroidId
      */
-    private static String getAndroidId(Context context) {
+    public static String getAndroidId(Context context) {
         try {
             return Settings.Secure.getString(context.getContentResolver(),
                     Settings.Secure.ANDROID_ID);

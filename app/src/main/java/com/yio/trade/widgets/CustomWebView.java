@@ -1,8 +1,12 @@
 package com.yio.trade.widgets;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
@@ -24,19 +28,31 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
-import com.yio.trade.utils.UIUtils;
+import com.blankj.utilcode.util.ActivityUtils;
+import com.blankj.utilcode.util.StringUtils;
 import com.yio.trade.common.Const;
 import com.yio.trade.utils.AppJs;
+import com.yio.trade.utils.UIUtils;
 
-import pers.zjc.commonlibs.util.StringUtils;
 import timber.log.Timber;
 
 public class CustomWebView extends WebView {
+
+    public ValueCallback<Uri> uploadMessage;
+    public ValueCallback<Uri[]> uploadMessageArr;
+    public static final int REQUEST_SELECT_FILE = 100;
+    public final static int FILECHOOSER_RESULTCODE = 101;
+    private final static int READ_EXTERNAL_STORAGEREQUESTCODE = 10;
+
     private WebProgressView progressView;//进度条
     private Context context;
+    private Activity activity;
 
     public CustomWebView(Context context) {
         this(context, null);
@@ -53,12 +69,13 @@ public class CustomWebView extends WebView {
     }
 
     private void init() {
+        activity = ActivityUtils.getActivityByContext(context);
         setVerticalScrollBarEnabled(true);
         setHorizontalScrollBarEnabled(true);
         setScrollBarSize(UIUtils.dp2px(context, 20));
         //初始化进度条
         progressView = new WebProgressView(context);
-        progressView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp2px(context, 2)));
+        progressView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, UIUtils.dp2px(context, 2)));
         progressView.setColor(Color.GREEN);
         progressView.setProgress(10);
         //把进度条加到Webview中
@@ -207,8 +224,106 @@ public class CustomWebView extends WebView {
 
         @Override
         public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
-            return super.onShowFileChooser(webView, filePathCallback, fileChooserParams);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    //没有权限则申请权限
+//                        choosefiletype = 2;
+//                        filePathCallbacktwo = filePathCallback;
+//                        fileChooserParamstwo = fileChooserParams;
+                    ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_EXTERNAL_STORAGEREQUESTCODE);
+                    return false;
+                } else {
+                    return fileTwo(filePathCallback, fileChooserParams);
+                }
+            } else {
+                //小于6.0，不用申请权限，直接执行
+                return fileTwo(filePathCallback, fileChooserParams);
+            }
         }
+
+        public void openFileChooser(ValueCallback<Uri> uploadMsg) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    //没有权限则申请权限
+//                        choosefiletype =1;
+//                        uploadMsgone = uploadMsg;
+//                        sone = "File Chooser";
+                    ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_EXTERNAL_STORAGEREQUESTCODE);
+                } else {
+                    fileone(uploadMsg, "File Chooser");
+                }
+            } else {
+                //小于6.0，不用申请权限，直接执行
+                fileone(uploadMsg, "File Chooser");
+            }
+
+        }
+
+        public void openFileChooser(ValueCallback uploadMsg, String acceptType) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    //没有权限则申请权限
+//                        choosefiletype =1;
+//                        uploadMsgone = uploadMsg;
+//                        sone = "File Browser";
+                    ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_EXTERNAL_STORAGEREQUESTCODE);
+                } else {
+                    fileone(uploadMsg, "File Browser");
+                }
+            } else {
+                //小于6.0，不用申请权限，直接执行
+                fileone(uploadMsg, "File Browser");
+            }
+
+        }
+
+        //For Android 4.1 only
+        public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    //没有权限则申请权限
+//                        choosefiletype =1;
+//                        uploadMsgone = uploadMsg;
+//                        sone = "File Browser";
+                    ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_EXTERNAL_STORAGEREQUESTCODE);
+                } else {
+                    fileone(uploadMsg, "File Browser");
+                }
+            } else {
+                //小于6.0，不用申请权限，直接执行
+                fileone(uploadMsg, "File Browser");
+            }
+
+        }
+
+    }
+
+    private void fileone(ValueCallback<Uri> uploadMsg, String s) {
+        uploadMessage = uploadMsg;
+        Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+        i.addCategory(Intent.CATEGORY_OPENABLE);
+        i.setType("image/*");
+        activity.startActivityForResult(Intent.createChooser(i, s), FILECHOOSER_RESULTCODE);
+    }
+
+    private boolean fileTwo(ValueCallback<Uri[]> filePathCallback, WebChromeClient.FileChooserParams fileChooserParams) {
+        if (uploadMessageArr != null) {
+            uploadMessageArr.onReceiveValue(null);
+            uploadMessageArr = null;
+        }
+        uploadMessageArr = filePathCallback;
+        try {
+            Intent intent = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                intent = fileChooserParams.createIntent();
+            }
+            activity.startActivityForResult(intent, REQUEST_SELECT_FILE);
+        } catch (ActivityNotFoundException e) {
+            uploadMessageArr = null;
+            Toast.makeText(getContext(), "Cannot Open File Chooser", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        return true;
     }
 
     private class MyWebviewClient extends WebViewClient {
@@ -270,18 +385,6 @@ public class CustomWebView extends WebView {
             Timber.e("onReceivedError");
             super.onReceivedError(view, request, error);
         }
-    }
-
-    /**
-     * dp转换成px
-     *
-     * @param context Context
-     * @param dp      dp
-     * @return px值
-     */
-    private int dp2px(Context context, float dp) {
-        final float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (dp * scale + 0.5f);
     }
 
 }

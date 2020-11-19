@@ -16,6 +16,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.ClipboardUtils;
+import com.blankj.utilcode.util.FragmentUtils;
+import com.blankj.utilcode.util.KeyboardUtils;
+import com.blankj.utilcode.util.StringUtils;
 import com.jess.arms.base.BaseFragment;
 import com.yio.mtg.trade.R;
 import com.jess.arms.di.component.AppComponent;
@@ -36,10 +40,6 @@ import butterknife.BindView;
 import com.yio.trade.di.component.DaggerShareComponent;
 import com.yio.trade.event.Event;
 
-import pers.zjc.commonlibs.util.ClipboardUtils;
-import pers.zjc.commonlibs.util.FragmentUtils;
-import pers.zjc.commonlibs.util.KeyboardUtils;
-import pers.zjc.commonlibs.util.StringUtils;
 import timber.log.Timber;
 
 import static com.jess.arms.utils.Preconditions.checkNotNull;

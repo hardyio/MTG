@@ -15,6 +15,8 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.blankj.utilcode.util.FragmentUtils;
+import com.blankj.utilcode.util.ToastUtils;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
 import com.yio.mtg.trade.R;
@@ -39,9 +41,6 @@ import java.util.List;
 import butterknife.BindView;
 import com.yio.trade.di.component.DaggerTodoComponent;
 import com.yio.trade.event.Event;
-
-import pers.zjc.commonlibs.util.FragmentUtils;
-import pers.zjc.commonlibs.util.ToastUtils;
 
 import static com.jess.arms.utils.Preconditions.checkNotNull;
 

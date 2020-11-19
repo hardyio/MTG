@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.blankj.utilcode.util.StringUtils;
 import com.jess.arms.utils.ArmsUtils;
 
 import com.yio.trade.common.Const;
@@ -11,7 +12,6 @@ import com.yio.trade.model.Article;
 import com.yio.trade.mvp.ui.activity.MainActivity;
 import com.yio.trade.mvp.ui.activity.WebActivity;
 import com.yio.trade.mvp.ui.fragment.UserFragment;
-import pers.zjc.commonlibs.util.StringUtils;
 
 /**
  * 跳转辅助类

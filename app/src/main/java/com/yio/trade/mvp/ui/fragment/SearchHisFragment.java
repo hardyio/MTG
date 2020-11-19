@@ -1,5 +1,6 @@
 package com.yio.trade.mvp.ui.fragment;
 
+import com.blankj.utilcode.util.ToastUtils;
 import com.google.android.flexbox.FlexboxLayoutManager;
 
 import android.content.Context;
@@ -38,7 +39,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import com.yio.trade.di.component.DaggerSearchComponent;
-import pers.zjc.commonlibs.util.ToastUtils;
 
 import static com.jess.arms.utils.Preconditions.checkNotNull;
 

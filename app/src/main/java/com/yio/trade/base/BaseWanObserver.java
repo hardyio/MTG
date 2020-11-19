@@ -1,5 +1,6 @@
 package com.yio.trade.base;
 
+import com.blankj.utilcode.util.StringUtils;
 import com.google.gson.JsonParseException;
 
 import android.net.ParseException;
@@ -22,7 +23,6 @@ import com.yio.trade.event.Event;
 import com.yio.trade.http.ApiException;
 import com.yio.trade.http.NetWorkManager;
 import com.yio.trade.result.BaseWanBean;
-import pers.zjc.commonlibs.util.StringUtils;
 import retrofit2.HttpException;
 import timber.log.Timber;
 

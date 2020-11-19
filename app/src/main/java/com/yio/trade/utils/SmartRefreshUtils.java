@@ -3,6 +3,7 @@ package com.yio.trade.utils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.blankj.utilcode.util.StringUtils;
 import com.scwang.smartrefresh.layout.api.RefreshHeader;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -11,7 +12,6 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.yio.trade.common.AppConfig;
 import com.yio.trade.common.Const;
 import com.yio.trade.widgets.PoemHeader;
-import pers.zjc.commonlibs.util.StringUtils;
 import timber.log.Timber;
 
 /**

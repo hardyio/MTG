@@ -2,6 +2,7 @@ package com.yio.trade.mvp.presenter;
 
 import android.app.Application;
 
+import com.blankj.utilcode.util.StringUtils;
 import com.jess.arms.di.scope.FragmentScope;
 import com.jess.arms.http.imageloader.ImageLoader;
 import com.jess.arms.integration.AppManager;
@@ -18,7 +19,6 @@ import com.yio.trade.common.JApplication;
 import com.yio.trade.model.User;
 import com.yio.trade.result.WanAndroidResponse;
 import com.yio.trade.utils.rx.RxScheduler;
-import pers.zjc.commonlibs.util.StringUtils;
 
 @FragmentScope
 public class SignupPresenter extends BasePresenter<SignupContract.Model, SignupContract.View> {

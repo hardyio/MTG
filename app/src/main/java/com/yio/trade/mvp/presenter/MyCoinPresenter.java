@@ -2,6 +2,7 @@ package com.yio.trade.mvp.presenter;
 
 import android.app.Application;
 
+import com.blankj.utilcode.util.ObjectUtils;
 import com.jess.arms.integration.AppManager;
 import com.jess.arms.di.scope.FragmentScope;
 import com.jess.arms.mvp.BasePresenter;
@@ -28,7 +29,6 @@ import com.yio.trade.base.BaseWanObserver;
 import com.yio.trade.result.BaseWanBean;
 import com.yio.trade.result.WanAndroidResponse;
 import com.yio.trade.utils.rx.RxScheduler;
-import pers.zjc.commonlibs.util.ObjectUtils;
 
 @FragmentScope
 public class MyCoinPresenter extends BasePresenter<MyCoinContract.Model, MyCoinContract.View> {

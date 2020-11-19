@@ -2,7 +2,7 @@
 <merge  xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
     
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/mRecyclerView"
         style="@style/RecyclerViewStyle"
         android:layout_width="match_parent"

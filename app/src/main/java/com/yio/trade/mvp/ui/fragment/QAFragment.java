@@ -212,12 +212,10 @@ public class QAFragment extends BaseLazyLoadFragment<QAPresenter>
         RvScrollTopUtils.smoothScrollTop(mRecyclerView);
     }
 
-    @Override
     public void showError(String msg) {
         statusView.showError(msg);
     }
 
-    @Override
     public void showNoNetwork() {
         statusView.showNoNetwork();
     }

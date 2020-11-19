@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.blankj.utilcode.util.ToastUtils;
 import com.classic.common.MultipleStatusView;
 import com.jess.arms.base.BaseLazyLoadFragment;
 import com.yio.mtg.trade.R;
@@ -42,7 +43,6 @@ import butterknife.BindView;
 import com.yio.trade.di.component.DaggerTabComponent;
 import com.yio.trade.event.Event;
 
-import pers.zjc.commonlibs.util.ToastUtils;
 
 public class TabFragment extends BaseLazyLoadFragment<TabPresenter>
         implements TabContract.View, ScrollTopListener {
@@ -327,7 +327,6 @@ public class TabFragment extends BaseLazyLoadFragment<TabPresenter>
         lazyLoadData();
     }
 
-    @Override
     public void showNoNetwork() {
         statusView.showNoNetwork();
     }

@@ -1,11 +1,11 @@
 package com.yio.trade.common;
 
+import com.blankj.utilcode.util.SPUtils;
+import com.blankj.utilcode.util.StringUtils;
 import com.yio.mtg.trade.R;
 import com.yio.trade.utils.DarkModeUtils;
 import com.yio.trade.utils.RvAnimUtils;
 
-import pers.zjc.commonlibs.util.SPUtils;
-import pers.zjc.commonlibs.util.StringUtils;
 
 public class AppConfig {
 

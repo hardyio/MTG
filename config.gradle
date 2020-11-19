@@ -6,10 +6,10 @@ ext {
 
     android = [
             applicationId    : "com.yio.mtg.trade",
-            compileSdkVersion: 29,
+            compileSdkVersion: 30,
             buildToolsVersion: "28.0.3",
             minSdkVersion    : 21,
-            targetSdkVersion : 29,
+            targetSdkVersion : 30,
             versionCode      : 1,
             versionName      : "1.0.0",
             keyAlias         : properties.getProperty('keyAlias'),
@@ -20,14 +20,15 @@ ext {
 
     version = [
             androidSupportSdkVersion: "28.0.0",
-            retrofitSdkVersion      : "2.4.0",
-            dagger2SdkVersion       : "2.19",
-            glideSdkVersion         : "4.8.0",
-            butterknifeSdkVersion   : "10.0.0",
+            androidXSdkVersion      : "1.1.0",
+            retrofitSdkVersion      : "2.7.2",
+            dagger2SdkVersion       : "2.26",
+            glideSdkVersion         : "4.11.0",
+            butterknifeSdkVersion   : "10.2.1",
             rxlifecycleSdkVersion   : "1.0",
             rxlifecycle2SdkVersion  : "2.2.2",
             espressoSdkVersion      : "3.0.1",
-            canarySdkVersion        : "1.5.4",
+            canarySdkVersion        : "2.2",
             smartRefreshVersion     : "1.1.0-alpha-32",
             rxToolVersion           : "v2.3.9",
             buglySdkVersion         : "latest.release", // 指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.2.0
@@ -35,9 +36,13 @@ ext {
     ]
 
     dependencies = [
-            //support
-            "design"                    : 'com.google.android.material:material:1.0.0',
-            "cardview-v7"               : 'androidx.cardview:cardview:1.0.0',
+            //androidx
+            "appcompat"                : "androidx.appcompat:appcompat:${version["androidXSdkVersion"]}",
+            "design"                    : "com.google.android.material:material:${version["androidXSdkVersion"]}",
+            "legacy-support-v4"        : "androidx.legacy:legacy-support-v4:1.0.0",
+            "cardview"               : 'androidx.cardview:cardview:1.0.0',
+            "annotations"              : "androidx.annotation:annotation:${version["androidXSdkVersion"]}",
+            "recyclerview"             : "androidx.recyclerview:recyclerview:${version["androidXSdkVersion"]}",
 
             //network
             "retrofit"                  : "com.squareup.retrofit2:retrofit:${version["retrofitSdkVersion"]}",
@@ -126,7 +131,7 @@ ext {
             "AndroidAOP"                : 'com.github.zhujiang521:AndroidAOP:1.1.1',
             "mmkv-static"               : 'com.tencent: mmkv-static:1.1.1',
             "mmkv"                      : 'com.tencent: mmkv:1.1.1',
-            "AndroidutilCode"           : 'com.blankj:utilcode:1.29.0',
+            "AndroidutilCode"           : 'com.blankj:utilcodex:1.30.5',
 
             //rxTools github地址:https://github.com/Tamsiree/RxTool
             "RxKit"                     : "com.github.tamsiree.RxTool:RxKit:${version["rxToolVersion"]}", //基础工具库
