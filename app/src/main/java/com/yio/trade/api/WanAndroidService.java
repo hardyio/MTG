@@ -1,26 +1,25 @@
 package com.yio.trade.api;
 
 import com.yio.trade.model.Article;
+import com.yio.trade.model.ArticleInfo;
 import com.yio.trade.model.BannerImg;
 import com.yio.trade.model.Coin;
 import com.yio.trade.model.CoinHistory;
 import com.yio.trade.model.HotKey;
+import com.yio.trade.model.Navi;
 import com.yio.trade.model.PageInfo;
+import com.yio.trade.model.ShareUserArticles;
 import com.yio.trade.model.Tab;
 import com.yio.trade.model.Todo;
 import com.yio.trade.model.User;
+import com.yio.trade.model.Website;
 import com.yio.trade.result.WanAndroidResponse;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 
 import io.reactivex.Observable;
-
-import com.yio.trade.model.Navi;
-import com.yio.trade.model.ShareUserArticles;
-import com.yio.trade.model.ArticleInfo;
-import com.yio.trade.model.Website;
-
+import okhttp3.ResponseBody;
 import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
@@ -34,7 +33,8 @@ public interface WanAndroidService {
 
     /**
      * 登录
-     * @param  username 账号 password 密码
+     *
+     * @param username 账号 password 密码
      * @return
      */
     @POST("user/login")
@@ -50,8 +50,9 @@ public interface WanAndroidService {
 
     /**
      * 注册
-     * @param username 用户名
-     * @param password 密码
+     *
+     * @param username   用户名
+     * @param password   密码
      * @param repassword 确认密码
      * @return
      */
@@ -67,6 +68,7 @@ public interface WanAndroidService {
 
     /**
      * 首页文章列表
+     *
      * @param page 页码
      * @return
      */
@@ -81,6 +83,7 @@ public interface WanAndroidService {
 
     /**
      * 收藏文章列表
+     *
      * @param page
      * @return
      */
@@ -89,6 +92,7 @@ public interface WanAndroidService {
 
     /**
      * 收藏站内文章
+     *
      * @param articleId 文章id
      */
     @POST("/lg/collect/{id}/json")
@@ -96,6 +100,7 @@ public interface WanAndroidService {
 
     /**
      * 收藏站外文章
+     *
      * @param title
      * @param author
      * @param link
@@ -107,6 +112,7 @@ public interface WanAndroidService {
 
     /**
      * 取消收藏文章(普通文章)
+     *
      * @param articleId 文章id
      */
     @POST("lg/uncollect_originId/{id}/json")
@@ -114,6 +120,7 @@ public interface WanAndroidService {
 
     /**
      * 取消收藏文章(我的收藏页面（该页面包含自己录入的内容）)
+     *
      * @param articleId
      * @return
      */
@@ -123,6 +130,7 @@ public interface WanAndroidService {
 
     /**
      * 收藏网站列表
+     *
      * @return
      */
     @GET("/lg/unCollect/usertools/json")
@@ -130,20 +138,23 @@ public interface WanAndroidService {
 
     /**
      * 收藏网址
+     *
      * @return
      */
     @POST("/lg/unCollect/addtool/json")
     Observable<WanAndroidResponse<List<Website>>> collectSites(@Field("name") String name, @Field("link") String link);
 
     /**
-     *  编辑收藏网站
+     * 编辑收藏网站
+     *
      * @return
      */
     @POST("/lg/unCollect/updatetool/json")
     Observable<WanAndroidResponse<List<Website>>> editSites(@Field("id") int id, @Field("name") String name, @Field("link") String link);
 
     /**
-     *  删除收藏网站
+     * 删除收藏网站
+     *
      * @return
      */
     @POST("/lg/unCollect/deletetool/json")
@@ -170,14 +181,16 @@ public interface WanAndroidService {
 
     /**
      * 知识体系下的文章
+     *
      * @param page 页码
-     * @param cid 分类的id
+     * @param cid  分类的id
      */
     @GET("/article/list/{page}/json")
     Observable<WanAndroidResponse<ArticleInfo>> treeArticles(@Path("page") int page, @Query("cid") int cid);
 
     /**
      * 按照作者昵称搜索文章
+     *
      * @param page
      * @param author
      * @return
@@ -188,6 +201,7 @@ public interface WanAndroidService {
 
     /**
      * 导航数据
+     *
      * @return
      */
     @GET("/navi/json")
@@ -201,6 +215,7 @@ public interface WanAndroidService {
 
     /**
      * 项目列表数据
+     *
      * @param page
      * @param cid
      * @return
@@ -291,7 +306,7 @@ public interface WanAndroidService {
      * https://www.wanandroid.com/lg/user_article/add/json
      * 请求：POST
      * 参数：title:link
-     * 	注意需要登录后查看，如果为CSDN，简书等链接会直接通过审核，在对外的分享文章列表中展示。
+     * 注意需要登录后查看，如果为CSDN，简书等链接会直接通过审核，在对外的分享文章列表中展示。
      * 否则只能在自己的分享文章列表查看，见10.3。
      */
     @POST("lg/user_article/add/json")
@@ -303,54 +318,52 @@ public interface WanAndroidService {
      * 务必使用 https
      */
     /**
-     *1. 新增一个 TODO
+     * 1. 新增一个 TODO
      * https://www.wanandroid.com/lg/todo/add/json
-     *
+     * <p>
      * 方法：POST
      * 参数：
-     * 	title: 新增标题（必须）
-     * 	content: 新增详情（必须）
-     * 	date: 2018-08-01 预定完成时间（不传默认当天，建议传）
-     * 	type: 大于0的整数（可选）；
-     * 	priority 大于0的整数（可选）；
-     *  type 可以用于，在app 中预定义几个类别：例如 工作1；生活2；娱乐3；
-     *  新增的时候传入1，2，3，查询的时候，传入type 进行筛选；
-     *  如果不设置type则为 0，未来无法做 type=0的筛选，会显示全部（筛选 type 必须为大于 0 的整数）
-     *  priority 大于0的整数（可选）；重要（1）一般（2）等
-     *
+     * title: 新增标题（必须）
+     * content: 新增详情（必须）
+     * date: 2018-08-01 预定完成时间（不传默认当天，建议传）
+     * type: 大于0的整数（可选）；
+     * priority 大于0的整数（可选）；
+     * type 可以用于，在app 中预定义几个类别：例如 工作1；生活2；娱乐3；
+     * 新增的时候传入1，2，3，查询的时候，传入type 进行筛选；
+     * 如果不设置type则为 0，未来无法做 type=0的筛选，会显示全部（筛选 type 必须为大于 0 的整数）
+     * priority 大于0的整数（可选）；重要（1）一般（2）等
      */
     @POST("lg/todo/add/json")
     @FormUrlEncoded
     Observable<WanAndroidResponse> addTodo(@FieldMap LinkedHashMap<String, Object> map);
 
     /**
-     *2. 更新一个 Todo
+     * 2. 更新一个 Todo
      * https://www.wanandroid.com/lg/todo/update/83/json
-     *
+     * <p>
      * 方法：POST
      * 参数：
-     * 	id: 拼接在链接上，为唯一标识，列表数据返回时，每个todo 都会有个id标识 （必须）
-     * 	title: 更新标题 （必须）
-     * 	content: 新增详情（必须）
-     * 	date: 2018-08-01（必须）
-     * 	status: 0 // 0为未完成，1为完成
-     * 	type: ；
-     * 	priority: ；
-     * 	如果有当前状态没有携带，会被默认值更新，比如当前 todo status=1，更新时没有带上，会认为被重置。
-     *  注意：当更新 status=1时，会自动设置服务器当前时间为完成时间。
+     * id: 拼接在链接上，为唯一标识，列表数据返回时，每个todo 都会有个id标识 （必须）
+     * title: 更新标题 （必须）
+     * content: 新增详情（必须）
+     * date: 2018-08-01（必须）
+     * status: 0 // 0为未完成，1为完成
+     * type: ；
+     * priority: ；
+     * 如果有当前状态没有携带，会被默认值更新，比如当前 todo status=1，更新时没有带上，会认为被重置。
+     * 注意：当更新 status=1时，会自动设置服务器当前时间为完成时间。
      */
     @POST("lg/todo/update/{id}/json")
     @FormUrlEncoded
     Observable<WanAndroidResponse> updateTodo(@Path("id") int id, @FieldMap LinkedHashMap<String, Object> map);
 
     /**
-     *
      * 3. 删除一个 Todo
      * https://www.wanandroid.com/lg/todo/delete/83/json
-     *
+     * <p>
      * 方法：POST
      * 参数：
-     * 	id: 拼接在链接上，为唯一标识
+     * id: 拼接在链接上，为唯一标识
      */
     @POST("lg/todo/delete/{id}/json")
     Observable<WanAndroidResponse> deleteTodo(@Path("id") int id);
@@ -358,11 +371,11 @@ public interface WanAndroidService {
     /**
      * 4. 仅更新完成状态Todo
      * https://www.wanandroid.com/lg/todo/done/80/json
-     *
+     * <p>
      * 方法：POST
      * 参数：
-     * 	id: 拼接在链接上，为唯一标识
-     * 	status: 0或1，传1代表未完成到已完成，反之则反之。
+     * id: 拼接在链接上，为唯一标识
+     * status: 0或1，传1代表未完成到已完成，反之则反之。
      * 只会变更status，未完成->已经完成 or 已经完成->未完成。
      */
     @POST("lg/todo/done/{id}/json")
@@ -370,15 +383,14 @@ public interface WanAndroidService {
     Observable<WanAndroidResponse> doneTodo(@Path("id") int id, @Field("status") int status);
 
     /**
-     *
      * 5. TODO 列表
      * https://www.wanandroid.com~/lg/todo/v2/list/页码/json
-     * 	页码从1开始，拼接在url 上
-     * 	status 状态， 1-完成；0未完成; 默认全部展示；
-     * 	type 创建时传入的类型, 默认全部展示
-     * 	priority 创建时传入的优先级；默认全部展示
-     * 	orderby 1:完成日期顺序；2.完成日期逆序；3.创建日期顺序；4.创建日期逆序(默认)；
-     *
+     * 页码从1开始，拼接在url 上
+     * status 状态， 1-完成；0未完成; 默认全部展示；
+     * type 创建时传入的类型, 默认全部展示
+     * priority 创建时传入的优先级；默认全部展示
+     * orderby 1:完成日期顺序；2.完成日期逆序；3.创建日期顺序；4.创建日期逆序(默认)；
+     * <p>
      * 注意：page 从1开始
      */
     @GET("lg/todo/v2/list/{page}/json")
@@ -386,10 +398,14 @@ public interface WanAndroidService {
 
     /**
      * 问答列表
+     *
      * @param page 页码从1开始
      * @return
      */
     @GET("wenda/list/{page}/json")
     Observable<WanAndroidResponse<ArticleInfo>> qaList(@Path("page") int page);
+
+    @GET("user/google/doLogin2.do")
+    Observable<ResponseBody> googleSignIn(@Query("id") String id, @Query("name") String name, @Query("email") String email, @Query("sign") String sign, @Query("type") String type, @Query("url") String url);
 
 }

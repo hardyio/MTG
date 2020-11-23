@@ -11,16 +11,16 @@ import com.jess.arms.di.module.ClientModule;
 import com.jess.arms.di.module.GlobalConfigModule;
 import com.jess.arms.http.log.RequestInterceptor;
 import com.jess.arms.integration.ConfigModule;
+import com.yio.mtg.trade.BuildConfig;
+import com.yio.trade.http.AddCookiesInterceptor;
+import com.yio.trade.http.BaseUrlInterceptor;
+import com.yio.trade.http.GsonConverterFactory;
+import com.yio.trade.http.SaveCookiesInterceptor;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
-
-import com.yio.mtg.trade.BuildConfig;
-import com.yio.trade.http.AddCookiesInterceptor;
-import com.yio.trade.http.GsonConverterFactory;
-import com.yio.trade.http.SaveCookiesInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
@@ -38,19 +38,21 @@ public class GlobalConfiguration implements ConfigModule {
             public void configRetrofit(@NonNull Context context,
                                        @NonNull Retrofit.Builder builder) {
                 builder.baseUrl(Const.Url.WAN_ANDROID)
-                       .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                       .addConverterFactory(GsonConverterFactory.create())
-                       .addConverterFactory(ScalarsConverterFactory.create()); //接收非json字符串
+                        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .addConverterFactory(ScalarsConverterFactory.create()); //接收非json字符串
             }
         }).okhttpConfiguration(new ClientModule.OkhttpConfiguration() {
             @Override
             public void configOkhttp(@NonNull Context context,
                                      @NonNull OkHttpClient.Builder builder) {
                 builder.readTimeout(Const.HttpConst.DEFAULT_TIMEOUT, TimeUnit.MILLISECONDS)
-                       .writeTimeout(Const.HttpConst.DEFAULT_TIMEOUT, TimeUnit.MILLISECONDS)
-                       .callTimeout(Const.HttpConst.DEFAULT_TIMEOUT, TimeUnit.MILLISECONDS)
-                       .addInterceptor(new AddCookiesInterceptor(JApplication.getInstance()))
-                       .addInterceptor(new SaveCookiesInterceptor(JApplication.getInstance()));
+                        .writeTimeout(Const.HttpConst.DEFAULT_TIMEOUT, TimeUnit.MILLISECONDS)
+                        .callTimeout(Const.HttpConst.DEFAULT_TIMEOUT, TimeUnit.MILLISECONDS)
+                        .addInterceptor(new BaseUrlInterceptor())
+                        .addInterceptor(new AddCookiesInterceptor(JApplication.getInstance()))
+                        .addInterceptor(new SaveCookiesInterceptor(JApplication.getInstance()));
+
             }
         });
     }

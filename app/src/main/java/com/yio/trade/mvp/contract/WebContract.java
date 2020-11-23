@@ -1,11 +1,12 @@
 package com.yio.trade.mvp.contract;
 
-import com.jess.arms.mvp.IView;
 import com.jess.arms.mvp.IModel;
-
-import io.reactivex.Observable;
+import com.jess.arms.mvp.IView;
 import com.yio.trade.model.Article;
 import com.yio.trade.result.WanAndroidResponse;
+
+import io.reactivex.Observable;
+import okhttp3.ResponseBody;
 
 /**
  * ================================================
@@ -25,6 +26,8 @@ public interface WebContract {
     interface View extends IView {
 
         void updateCollectStatus(boolean collect, Article article);
+
+        void getTokenSuccess(String token1, String token2, String url);
     }
 
     //Model层定义接口,外部只需关心Model返回的数据,无需关心内部细节,即是否使用缓存
@@ -33,5 +36,7 @@ public interface WebContract {
         Observable<WanAndroidResponse> collect(int id);
 
         Observable<WanAndroidResponse> unCollect(int id);
+
+        Observable<ResponseBody> googleSignIn(String id, String name, String email, String sign, String type, String host);
     }
 }

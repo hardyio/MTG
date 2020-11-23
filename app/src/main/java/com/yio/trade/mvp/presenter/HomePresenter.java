@@ -7,6 +7,8 @@ import com.jess.arms.http.imageloader.ImageLoader;
 import com.jess.arms.integration.AppManager;
 import com.jess.arms.mvp.BasePresenter;
 import com.jess.arms.utils.RxLifecycleUtils;
+import com.yio.trade.base.BaseWanObserver;
+import com.yio.trade.http.RetryWithDelay;
 import com.yio.trade.model.BannerImg;
 import com.yio.trade.mvp.contract.HomeContract;
 
@@ -22,6 +24,7 @@ import com.yio.trade.http.NetWorkManager;
 import com.yio.trade.model.Article;
 import com.yio.trade.model.ArticleInfo;
 import com.yio.trade.result.WanAndroidResponse;
+import com.yio.trade.utils.rx.RxScheduler;
 
 @FragmentScope
 public class HomePresenter extends BasePresenter<HomeContract.Model, HomeContract.View> {

@@ -3,6 +3,10 @@ package com.yio.trade.mvp.ui.activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,22 +15,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.util.Log;
-import android.view.Gravity;
-import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-
-
 import com.blankj.utilcode.util.ActivityUtils;
 import com.blankj.utilcode.util.FragmentUtils;
-import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.gyf.immersionbar.ImmersionBar;
 import com.jess.arms.base.BaseActivity;
@@ -42,14 +36,10 @@ import com.yio.trade.mvp.presenter.MainPresenter;
 import com.yio.trade.mvp.ui.fragment.ContainerFragment;
 import com.yio.trade.mvp.ui.fragment.LoginFragment;
 import com.yio.trade.mvp.ui.fragment.SplashFragment;
-import com.yio.trade.utils.AppJs;
-import com.yio.trade.utils.MethodUtil;
 import com.yio.trade.utils.RouterHelper;
 
 import org.json.JSONObject;
 import org.simple.eventbus.Subscriber;
-
-import java.lang.reflect.Method;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

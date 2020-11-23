@@ -109,13 +109,15 @@ public class AppJs {
 
 
     /**
-     * 调取谷歌登录方法
+     * H5调用原生谷歌登录
+     * 后续流程看第七点
      *
      * @param data {"sign":"","host":"https://bb.skr.today"}
      */
     @JavascriptInterface
     public void openGoogle(String data) {
-        //TODO
+        System.out.println("HttpLog=" + data);
+        ((WebActivity) context).googleSignIn(data);
     }
 
     /**
@@ -284,7 +286,6 @@ public class AppJs {
      */
     @JavascriptInterface
     public void takePortraitPicture(String callbackMethod) {
-        //TODO
         //参考实现：成员变量记录下js方法名，图片转成base64字符串后调用该js方法传递给H5
         if (!TextUtils.isEmpty(callbackMethod)) {
             StringBuilder builder = new StringBuilder(callbackMethod).append("(");
@@ -311,7 +312,7 @@ public class AppJs {
      * AppJs是否存在交互方法 告诉H5是否存在传入的对应方法
      *
      * @param callbackMethod 回调给H5时调用的JavaScript方法
-     * @param name 需要查询AppJs中是否存在的方法
+     * @param name           需要查询AppJs中是否存在的方法
      */
     @JavascriptInterface
     public void isContainsName(String callbackMethod, String name) {

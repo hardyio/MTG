@@ -3,11 +3,9 @@ package com.yio.trade.mvp.model;
 import android.app.Application;
 
 import com.google.gson.Gson;
-
+import com.jess.arms.di.scope.ActivityScope;
 import com.jess.arms.integration.IRepositoryManager;
 import com.jess.arms.mvp.BaseModel;
-
-import com.jess.arms.di.scope.ActivityScope;
 import com.yio.trade.api.WanAndroidService;
 import com.yio.trade.mvp.contract.WebContract;
 import com.yio.trade.result.WanAndroidResponse;
@@ -15,6 +13,7 @@ import com.yio.trade.result.WanAndroidResponse;
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
+import okhttp3.ResponseBody;
 
 /**
  * ================================================
@@ -40,7 +39,7 @@ public class WebModel extends BaseModel implements WebContract.Model {
     @Inject
     public WebModel(IRepositoryManager repositoryManager) {
         super(repositoryManager);
-        wanAndroidService = repositoryManager.obtainCacheService(WanAndroidService.class);
+        wanAndroidService = mRepositoryManager.obtainRetrofitService(WanAndroidService.class);
     }
 
     @Override
@@ -59,4 +58,10 @@ public class WebModel extends BaseModel implements WebContract.Model {
     public Observable<WanAndroidResponse> unCollect(int id) {
         return wanAndroidService.unCollect(id);
     }
+
+    @Override
+    public Observable<ResponseBody> googleSignIn(String id, String name, String email, String sign, String type, String url) {
+        return wanAndroidService.googleSignIn(id, name, email, sign, type, url);
+    }
+
 }

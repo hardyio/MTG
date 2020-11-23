@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.ValueCallback;
@@ -19,12 +20,25 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 
+import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.ToastUtils;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.gyf.immersionbar.ImmersionBar;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
 import com.yio.mtg.trade.R;
+import com.yio.trade.bean.GoogleSignInBean;
 import com.yio.trade.common.Const;
 import com.yio.trade.di.component.DaggerWebComponent;
 import com.yio.trade.model.Article;
@@ -45,6 +59,7 @@ public class WebActivity extends BaseActivity<WebPresenter> implements WebContra
     public static final int TYPE_ARTICLE = 1;
     public static final int TYPE_BANNER = 2;
     public static final int TYPE_URL = 3;
+    private static final int RC_SIGN_IN = 200;
 
     @BindView(R.id.ivLeft)
     ImageView ivLeft;
@@ -69,6 +84,9 @@ public class WebActivity extends BaseActivity<WebPresenter> implements WebContra
     private String mTitle = "";
     private int forbid;
     private String jsMethodName = "";
+    private GoogleSignInClient mGoogleSignInClient;
+    private FirebaseAuth mAuth;
+    private String openGoogleJson;
 
     @Override
     public void setupActivityComponent(@NonNull AppComponent appComponent) {
@@ -91,6 +109,15 @@ public class WebActivity extends BaseActivity<WebPresenter> implements WebContra
         initTitle();
         initWebView();
         initNavigation();
+        initGoogleSignIn();
+    }
+
+    private void initGoogleSignIn() {
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        mAuth = FirebaseAuth.getInstance();
     }
 
     private void initParams() {
@@ -231,6 +258,11 @@ public class WebActivity extends BaseActivity<WebPresenter> implements WebContra
     }
 
     @Override
+    public void getTokenSuccess(String token1, String token2, String url) {
+
+    }
+
+    @Override
     public void onBackPressed() {
         if (this.forbid == 1 || TextUtils.isEmpty(jsMethodName)) {
             return;
@@ -259,6 +291,12 @@ public class WebActivity extends BaseActivity<WebPresenter> implements WebContra
         this.jsMethodName = methodName;
     }
 
+    public void googleSignIn(String json) {
+        this.openGoogleJson = json;
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -280,9 +318,45 @@ public class WebActivity extends BaseActivity<WebPresenter> implements WebContra
                 webView.uploadMessage.onReceiveValue(result);
                 webView.uploadMessage = null;
                 break;
+            case RC_SIGN_IN:
+                Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+                try {
+                    // Google Sign In was successful, authenticate with Firebase
+                    GoogleSignInAccount account = task.getResult(ApiException.class);
+                    if (!TextUtils.isEmpty(this.openGoogleJson)) {
+                        GoogleSignInBean googleSignInBean = GsonUtils.fromJson(this.openGoogleJson, GoogleSignInBean.class);
+                        String id = account.getId();
+                        String displayName = account.getDisplayName();
+                        String email = account.getEmail();
+                        assert mPresenter != null;
+                        mPresenter.getToken(id, displayName, email, googleSignInBean.getSign(), "1", googleSignInBean.getHost());
+                    }
+                } catch (Exception e) {
+                    // Google Sign In failed, update UI appropriately
+                    Log.w(TAG, "Exception", e);
+                }
+                break;
             default:
                 break;
         }
+    }
+
+    private void firebaseAuthWithGoogle(String idToken) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "signInWithCredential:success");
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "signInWithCredential:failure", task.getException());
+                        }
+                        // ...
+                    }
+                });
     }
 
 }
