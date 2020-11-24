@@ -25,12 +25,7 @@ public class BaseUrlInterceptor implements Interceptor {
             Request.Builder builder = request.newBuilder();
             HttpUrl newFullUrl = oldHttpUrl
                     .newBuilder()
-                    // 更换网络协议
-                    .scheme("https")
-                    // 更换主机名
-                    .host("c1.mufg365.com")
-                    // 更换端口
-                    .port(80)
+                    .host(url)
                     .build();
             return chain.proceed(builder.url(newFullUrl).build());
         }

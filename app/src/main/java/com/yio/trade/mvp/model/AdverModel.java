@@ -8,6 +8,7 @@ import com.jess.arms.integration.IRepositoryManager;
 import com.jess.arms.mvp.BaseModel;
 import com.yio.trade.api.WanAndroidService;
 import com.yio.trade.bean.LoginBean;
+import com.yio.trade.mvp.contract.AdverContract;
 import com.yio.trade.mvp.contract.WebContract;
 import com.yio.trade.result.BaseBean;
 import com.yio.trade.result.WanAndroidResponse;
@@ -15,7 +16,6 @@ import com.yio.trade.result.WanAndroidResponse;
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
-import okhttp3.ResponseBody;
 
 /**
  * ================================================
@@ -30,7 +30,7 @@ import okhttp3.ResponseBody;
  * ================================================
  */
 @ActivityScope
-public class WebModel extends BaseModel implements WebContract.Model {
+public class AdverModel extends BaseModel implements AdverContract.Model {
 
     @Inject
     Gson mGson;
@@ -39,7 +39,7 @@ public class WebModel extends BaseModel implements WebContract.Model {
     private WanAndroidService wanAndroidService;
 
     @Inject
-    public WebModel(IRepositoryManager repositoryManager) {
+    public AdverModel(IRepositoryManager repositoryManager) {
         super(repositoryManager);
         wanAndroidService = mRepositoryManager.obtainRetrofitService(WanAndroidService.class);
     }
@@ -52,18 +52,7 @@ public class WebModel extends BaseModel implements WebContract.Model {
     }
 
     @Override
-    public Observable<WanAndroidResponse> collect(int id) {
-        return wanAndroidService.collectInside(id);
+    public Observable<BaseBean<LoginBean>> googleSignIn(String id, String name, String email, String sign, String type, String host) {
+        return wanAndroidService.googleSignIn(id, name, email, sign, type, host);
     }
-
-    @Override
-    public Observable<WanAndroidResponse> unCollect(int id) {
-        return wanAndroidService.unCollect(id);
-    }
-
-    @Override
-    public Observable<BaseBean<LoginBean>> googleSignIn(String id, String name, String email, String sign, String type, String url) {
-        return wanAndroidService.googleSignIn(id, name, email, sign, type, url);
-    }
-
 }

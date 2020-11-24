@@ -4,9 +4,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
-import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -35,7 +33,6 @@ import com.yio.trade.mvp.contract.MainContract;
 import com.yio.trade.mvp.presenter.MainPresenter;
 import com.yio.trade.mvp.ui.fragment.ContainerFragment;
 import com.yio.trade.mvp.ui.fragment.LoginFragment;
-import com.yio.trade.mvp.ui.fragment.SplashFragment;
 import com.yio.trade.utils.RouterHelper;
 
 import org.json.JSONObject;
@@ -53,8 +50,6 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
 
     @BindView(R.id.flContainer)
     FrameLayout flContainer;
-    @BindView(R.id.flash_view)
-    LinearLayout flashView;
     /* 当前fragment */
     private Fragment curFragment;
 
@@ -70,24 +65,16 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
 
     @Override
     public int initView(@Nullable Bundle savedInstanceState) {
-        ImmersionBar.with(this)
-                .fitsSystemWindows(true)  //使用该属性,必须指定状态栏颜色
-                .statusBarColor(R.color.colorPrimary)
-                .init();
         return R.layout.activity_main; //如果你不需要框架帮你设置 setContentView(id) 需要自行设置,请返回 0
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
-        flashView.setVisibility(View.VISIBLE);
-        flashView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                flashView.setVisibility(View.GONE);
-            }
-        }, 1500);
-
+        ImmersionBar.with(this)
+                .fitsSystemWindows(true)  //使用该属性,必须指定状态栏颜色
+                .statusBarColor(R.color.colorPrimary)
+                .init();
         curFragment = (ContainerFragment) getSupportFragmentManager().findFragmentById(R.id.fragment);
         // 灰度化方案二(清明节灰化app)，来源：鸿洋公众号：https://mp.weixin.qq.com/s/EioJ8ogsCxQEFm44mKFiOQ
         //        Paint paint = new Paint();
@@ -161,7 +148,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
         mFragmentManager = getSupportFragmentManager();
-        RouterHelper.switchToWebPageWithUrl(this,"https://c1.mufg365.com/app_bridge.html","Test");
+//        RouterHelper.switchToWebPageWithUrl(this,"https://c1.mufg365.com/app_bridge.html","Test");
     }
 
     /**
@@ -195,9 +182,6 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
                 trans.hide(curFragment).show(targetFragment);
             }
             trans.commitAllowingStateLoss();
-            if (curFragment instanceof SplashFragment) {
-                trans.remove(curFragment);
-            }
             curFragment = targetFragment;
         }
     }

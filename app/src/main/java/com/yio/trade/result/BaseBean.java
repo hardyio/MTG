@@ -1,6 +1,6 @@
 package com.yio.trade.result;
 
-public abstract class BaseBean<T> {
+public class BaseBean<T> {
 
     private int code;
 
@@ -8,9 +8,15 @@ public abstract class BaseBean<T> {
 
     private T data;
 
-    public abstract int getCode();
+    public int getCode() {
+        return code;
+    }
 
-    public abstract String getMsg();
+    public String getMsg() {
+        return msg;
+    }
 
-    public abstract T getData();
+    public T getData() {
+        return data;
+    }
 }

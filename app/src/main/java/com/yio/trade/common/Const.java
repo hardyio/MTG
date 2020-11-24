@@ -6,7 +6,8 @@ import java.text.SimpleDateFormat;
 
 public interface Const {
 
-    String APP_ID = "702cce47ce";
+    String VEST_CODE = "R7NQEZRJ";
+    String CHANNEL_CODE = "google";
 
     interface Url {
         String DAILY_BING = "http://cn.bing.com/th?id=OHR.BourgesAerial_ROW9185097510_1920x1080.jpg&rf=LaDigue_1920x1081920x1080.jpg";
@@ -14,6 +15,7 @@ public interface Const {
         String DAILY_BING_GUOLIN = "http://guolin.tech/api/bing_pic";
         String GUOLIN = "http://guolin.tech/";
         String WAN_ANDROID = "https://www.wanandroid.com/";
+        String API_HOST = "https://api.encofrador.com/";
         String GITHUB = "https://api.github.com/";
         String ABOUT_US = WAN_ANDROID + "about";
         String RANK_RULES = WAN_ANDROID + "blog/show/2653";

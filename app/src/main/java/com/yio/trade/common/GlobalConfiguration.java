@@ -37,7 +37,7 @@ public class GlobalConfiguration implements ConfigModule {
             @Override
             public void configRetrofit(@NonNull Context context,
                                        @NonNull Retrofit.Builder builder) {
-                builder.baseUrl(Const.Url.WAN_ANDROID)
+                builder.baseUrl(Const.Url.API_HOST)
                         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                         .addConverterFactory(GsonConverterFactory.create())
                         .addConverterFactory(ScalarsConverterFactory.create()); //接收非json字符串

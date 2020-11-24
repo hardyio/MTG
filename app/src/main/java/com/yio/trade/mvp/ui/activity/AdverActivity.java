@@ -41,10 +41,13 @@ import com.jess.arms.utils.ArmsUtils;
 import com.yio.mtg.trade.R;
 import com.yio.trade.bean.SignInBean;
 import com.yio.trade.common.Const;
+import com.yio.trade.di.component.DaggerAdverComponent;
 import com.yio.trade.di.component.DaggerWebComponent;
 import com.yio.trade.model.Article;
 import com.yio.trade.model.BannerImg;
+import com.yio.trade.mvp.contract.AdverContract;
 import com.yio.trade.mvp.contract.WebContract;
+import com.yio.trade.mvp.presenter.AdverPresenter;
 import com.yio.trade.mvp.presenter.WebPresenter;
 import com.yio.trade.utils.UIUtils;
 import com.yio.trade.utils.WebViewClient;
@@ -55,7 +58,7 @@ import butterknife.BindView;
 import static android.view.KeyEvent.KEYCODE_BACK;
 import static com.jess.arms.utils.Preconditions.checkNotNull;
 
-public class WebActivity extends BaseActivity<WebPresenter> implements WebContract.View {
+public class AdverActivity extends BaseActivity<AdverPresenter> implements AdverContract.View {
 
     public static final int TYPE_ARTICLE = 1;
     public static final int TYPE_BANNER = 2;
@@ -91,7 +94,7 @@ public class WebActivity extends BaseActivity<WebPresenter> implements WebContra
 
     @Override
     public void setupActivityComponent(@NonNull AppComponent appComponent) {
-        DaggerWebComponent //如找不到该类,请编译一下项目
+        DaggerAdverComponent //如找不到该类,请编译一下项目
                 .builder().appComponent(appComponent).view(this).build().inject(this);
     }
 
@@ -211,7 +214,7 @@ public class WebActivity extends BaseActivity<WebPresenter> implements WebContra
         webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
         webView.getSettings().setLoadWithOverviewMode(true);
         //如果不设置WebViewClient，请求会跳转系统浏览器
-        webView.setWebViewClient(new WebViewClient(WebActivity.this, mUrl));
+        webView.setWebViewClient(new WebViewClient(AdverActivity.this, mUrl));
         webView.loadUrl(mUrl);
     }
 
@@ -250,12 +253,6 @@ public class WebActivity extends BaseActivity<WebPresenter> implements WebContra
     @Override
     public void killMyself() {
         finish();
-    }
-
-    @Override
-    public void updateCollectStatus(boolean collect, Article article) {
-//        ivRight.setImageResource(collect ? R.drawable.ic_like_fill : R.drawable.ic_like);
-        article.setCollect(collect);
     }
 
     @Override

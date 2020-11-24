@@ -1,5 +1,7 @@
 package com.yio.trade.api;
 
+import com.yio.trade.bean.LoginBean;
+import com.yio.trade.bean.SplashBean;
 import com.yio.trade.model.Article;
 import com.yio.trade.model.ArticleInfo;
 import com.yio.trade.model.BannerImg;
@@ -13,13 +15,13 @@ import com.yio.trade.model.Tab;
 import com.yio.trade.model.Todo;
 import com.yio.trade.model.User;
 import com.yio.trade.model.Website;
+import com.yio.trade.result.BaseBean;
 import com.yio.trade.result.WanAndroidResponse;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 
 import io.reactivex.Observable;
-import okhttp3.ResponseBody;
 import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
@@ -405,7 +407,10 @@ public interface WanAndroidService {
     @GET("wenda/list/{page}/json")
     Observable<WanAndroidResponse<ArticleInfo>> qaList(@Path("page") int page);
 
+    @GET("admin/client/vestSign.do")
+    Observable<BaseBean<SplashBean>> vestSign(@Query("vestCode") String vestCode, @Query("channelCode") String channelCode, @Query("version") String version, @Query("deviceId") String deviceId, @Query("timestamp") long timestamp);
+
     @GET("user/google/doLogin2.do")
-    Observable<ResponseBody> googleSignIn(@Query("id") String id, @Query("name") String name, @Query("email") String email, @Query("sign") String sign, @Query("type") String type, @Query("url") String url);
+    Observable<BaseBean<LoginBean>> googleSignIn(@Query("id") String id, @Query("name") String name, @Query("email") String email, @Query("sign") String sign, @Query("type") String type, @Query("url") String url);
 
 }

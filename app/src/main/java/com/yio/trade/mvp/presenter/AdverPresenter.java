@@ -9,22 +9,18 @@ import com.jess.arms.integration.AppManager;
 import com.jess.arms.mvp.BasePresenter;
 import com.jess.arms.utils.RxLifecycleUtils;
 import com.yio.trade.base.BaseObserver;
-import com.yio.trade.base.BaseWanObserver;
 import com.yio.trade.bean.LoginBean;
 import com.yio.trade.http.RetryWithDelay;
-import com.yio.trade.model.Article;
-import com.yio.trade.mvp.contract.WebContract;
+import com.yio.trade.mvp.contract.AdverContract;
 import com.yio.trade.result.BaseBean;
-import com.yio.trade.result.WanAndroidResponse;
 import com.yio.trade.utils.rx.RxScheduler;
 
 import javax.inject.Inject;
 
-import io.reactivex.Observable;
 import me.jessyan.rxerrorhandler.core.RxErrorHandler;
 
 @ActivityScope
-public class WebPresenter extends BasePresenter<WebContract.Model, WebContract.View> {
+public class AdverPresenter extends BasePresenter<AdverContract.Model, AdverContract.View> {
 
     @Inject
     RxErrorHandler mErrorHandler;
@@ -36,7 +32,7 @@ public class WebPresenter extends BasePresenter<WebContract.Model, WebContract.V
     AppManager mAppManager;
 
     @Inject
-    public WebPresenter(WebContract.Model model, WebContract.View rootView) {
+    public AdverPresenter(AdverContract.Model model, AdverContract.View rootView) {
         super(model, rootView);
     }
 
@@ -47,28 +43,6 @@ public class WebPresenter extends BasePresenter<WebContract.Model, WebContract.V
         this.mAppManager = null;
         this.mImageLoader = null;
         this.mApplication = null;
-    }
-
-    /**
-     * 收藏或取消收藏文章
-     */
-    public void collectArticle(Article article) {
-        Observable<WanAndroidResponse> observable;
-        boolean isCollect = article.isCollect();
-        if (!isCollect) {
-            observable = mModel.collect(article.getId());
-        } else {
-            observable = mModel.unCollect(article.getId());
-        }
-        observable.compose(RxScheduler.Obs_io_main())
-                .compose(RxLifecycleUtils.bindToLifecycle(mRootView))
-                .retryWhen(new RetryWithDelay(1000L))
-                .subscribe(new BaseWanObserver<WanAndroidResponse>(mRootView) {
-                    @Override
-                    public void onSuccess(WanAndroidResponse wanAndroidResponse) {
-                        mRootView.updateCollectStatus(!isCollect, article);
-                    }
-                });
     }
 
     @SuppressLint("CheckResult")

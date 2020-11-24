@@ -116,7 +116,6 @@ public class AppJs {
      */
     @JavascriptInterface
     public void openGoogle(String data) {
-        System.out.println("HttpLog=" + data);
         ((WebActivity) context).googleSignIn(data);
     }
 

@@ -50,6 +50,7 @@ public abstract class BaseObserver<T> extends ResourceObserver<T> {
         if (t instanceof BaseBean) {
             switch (((BaseBean)t).getCode()) {
                 case Const.HttpConst.HTTP_CODE_SUCCESS:
+                case 200:
                     onSuccess(t);
                     break;
                 case Const.HttpConst.HTTP_CODE_LOGIN_EXPIRED:

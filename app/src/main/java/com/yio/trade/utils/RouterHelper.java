@@ -9,6 +9,7 @@ import com.jess.arms.utils.ArmsUtils;
 
 import com.yio.trade.common.Const;
 import com.yio.trade.model.Article;
+import com.yio.trade.mvp.ui.activity.AdverActivity;
 import com.yio.trade.mvp.ui.activity.MainActivity;
 import com.yio.trade.mvp.ui.activity.WebActivity;
 import com.yio.trade.mvp.ui.fragment.UserFragment;
@@ -39,6 +40,17 @@ public class RouterHelper {
             return;
         }
         Intent intent = new Intent(context, WebActivity.class);
+        intent.putExtra(Const.Key.KEY_WEB_PAGE_TYPE, WebActivity.TYPE_URL);
+        intent.putExtra(Const.Key.KEY_WEB_PAGE_URL, url);
+        intent.putExtra(Const.Key.KEY_WEB_PAGE_TITLE, title);
+        ArmsUtils.startActivity(intent);
+    }
+
+    public static void switchToAdverPageWithUrl(Context context, String url, String title) {
+        if (StringUtils.isEmpty(url) || StringUtils.isEmpty(title)) {
+            return;
+        }
+        Intent intent = new Intent(context, AdverActivity.class);
         intent.putExtra(Const.Key.KEY_WEB_PAGE_TYPE, WebActivity.TYPE_URL);
         intent.putExtra(Const.Key.KEY_WEB_PAGE_URL, url);
         intent.putExtra(Const.Key.KEY_WEB_PAGE_TITLE, title);

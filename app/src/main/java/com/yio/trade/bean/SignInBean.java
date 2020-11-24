@@ -1,6 +1,6 @@
 package com.yio.trade.bean;
 
-public class GoogleSignInBean {
+public class SignInBean {
 
     /**
      * sign : 781h18fn1u34n
