@@ -350,6 +350,15 @@ public class WebActivity extends BaseActivity<WebPresenter> implements WebContra
         }
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        String url = intent.getStringExtra(Const.Key.KEY_WEB_PAGE_URL);
+        if (!TextUtils.isEmpty(url) && webView != null) {
+            webView.loadUrl(url);
+        }
+    }
+
     private void firebaseAuthWithGoogle(String idToken) {
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         mAuth.signInWithCredential(credential)

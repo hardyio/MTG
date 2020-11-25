@@ -9,16 +9,16 @@ import com.jess.arms.integration.AppManager;
 import com.jess.arms.mvp.BasePresenter;
 import com.jess.arms.utils.RxLifecycleUtils;
 import com.yio.mtg.trade.R;
+import com.yio.trade.base.BaseWanObserver;
+import com.yio.trade.common.JApplication;
+import com.yio.trade.model.User;
 import com.yio.trade.mvp.contract.SignupContract;
+import com.yio.trade.result.WanAndroidResponse;
+import com.yio.trade.utils.rx.RxScheduler;
 
 import javax.inject.Inject;
 
 import me.jessyan.rxerrorhandler.core.RxErrorHandler;
-import com.yio.trade.base.BaseWanObserver;
-import com.yio.trade.common.JApplication;
-import com.yio.trade.model.User;
-import com.yio.trade.result.WanAndroidResponse;
-import com.yio.trade.utils.rx.RxScheduler;
 
 @FragmentScope
 public class SignupPresenter extends BasePresenter<SignupContract.Model, SignupContract.View> {
@@ -39,29 +39,31 @@ public class SignupPresenter extends BasePresenter<SignupContract.Model, SignupC
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
-        mRootView.killMyself();
+        if (mRootView != null) {
+            mRootView.killMyself();
+        }
         this.mErrorHandler = null;
         this.mAppManager = null;
         this.mImageLoader = null;
         this.mApplication = null;
+        super.onDestroy();
     }
 
     public void signUp(String userName, String originPwd, String rePwd) {
         if (validate(userName, originPwd, rePwd)) {
             mModel.signUp(userName, originPwd, rePwd)
-                  .compose(RxLifecycleUtils.bindToLifecycle(mRootView))
-                  .compose(RxScheduler.Obs_io_main())
-                  .subscribe(new BaseWanObserver<WanAndroidResponse<User>>(mRootView) {
-                      @Override
-                      public void onSuccess(WanAndroidResponse<User> response) {
-                          User user = response.getData();
-                          if (user != null) {
-                              user.setPassword(rePwd);
-                              mRootView.showSignUpSuccess(user);
-                          }
-                      }
-                  });
+                    .compose(RxLifecycleUtils.bindToLifecycle(mRootView))
+                    .compose(RxScheduler.Obs_io_main())
+                    .subscribe(new BaseWanObserver<WanAndroidResponse<User>>(mRootView) {
+                        @Override
+                        public void onSuccess(WanAndroidResponse<User> response) {
+                            User user = response.getData();
+                            if (user != null) {
+                                user.setPassword(rePwd);
+                                mRootView.showSignUpSuccess(user);
+                            }
+                        }
+                    });
         }
     }
 

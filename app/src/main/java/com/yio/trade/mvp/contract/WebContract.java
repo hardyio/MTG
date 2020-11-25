@@ -8,7 +8,6 @@ import com.yio.trade.result.BaseBean;
 import com.yio.trade.result.WanAndroidResponse;
 
 import io.reactivex.Observable;
-import okhttp3.ResponseBody;
 
 /**
  * ================================================

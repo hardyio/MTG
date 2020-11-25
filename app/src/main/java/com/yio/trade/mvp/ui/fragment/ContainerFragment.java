@@ -245,9 +245,9 @@ public class ContainerFragment extends BaseFragment<ContainerPresenter>
                     mActivity.switchFragment(TodoTabFragment.newInstance());
                     //                    launchActivity(new Intent(mContext, TodoTabFragment.class));
                     break;
-                case R.id.nav_settings:
-                    launchActivity(new Intent(mContext, SettingsActivity.class));
-                    break;
+//                case R.id.nav_settings:
+//                    launchActivity(new Intent(mContext, SettingsActivity.class));
+//                    break;
                 case R.id.nav_about_us:
                     Intent intent = new Intent(mActivity, WebActivity.class);
                     intent.putExtra(Const.Key.KEY_WEB_PAGE_TYPE, WebActivity.TYPE_URL);

@@ -1,9 +1,10 @@
 package com.yio.trade.mvp.contract;
 
-import com.jess.arms.mvp.IView;
 import com.jess.arms.mvp.IModel;
 
 import io.reactivex.Observable;
+
+import com.jess.arms.mvp.IView;
 import com.yio.trade.result.WanAndroidResponse;
 
 public interface ShareContract {

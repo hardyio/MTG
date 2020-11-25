@@ -141,7 +141,7 @@ public class CollectionFragment extends BaseFragment<CollectionPresenter>
     }
 
     private void initToolbar() {
-        tvTitle.setText("我的收藏");
+        tvTitle.setText("My Collection");
         toolbarLeft.setOnClickListener(v -> killMyself());
     }
 

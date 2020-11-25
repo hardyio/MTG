@@ -1,14 +1,11 @@
 package com.yio.trade.mvp.contract;
 
-import com.jess.arms.mvp.IView;
 import com.jess.arms.mvp.IModel;
+import com.jess.arms.mvp.IView;
 import com.yio.trade.bean.SplashBean;
-import com.yio.trade.model.Article;
 import com.yio.trade.result.BaseBean;
-import com.yio.trade.result.WanAndroidResponse;
 
 import io.reactivex.Observable;
-import retrofit2.http.Query;
 
 /**
  * ================================================

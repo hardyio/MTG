@@ -1,7 +1,7 @@
 package com.yio.trade.mvp.contract;
 
-import com.jess.arms.mvp.IView;
 import com.jess.arms.mvp.IModel;
+import com.jess.arms.mvp.IView;
 import com.yio.trade.model.HotKey;
 
 import java.util.List;

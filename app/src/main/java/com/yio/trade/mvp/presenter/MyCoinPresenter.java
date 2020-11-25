@@ -3,32 +3,31 @@ package com.yio.trade.mvp.presenter;
 import android.app.Application;
 
 import com.blankj.utilcode.util.ObjectUtils;
-import com.jess.arms.integration.AppManager;
 import com.jess.arms.di.scope.FragmentScope;
-import com.jess.arms.mvp.BasePresenter;
 import com.jess.arms.http.imageloader.ImageLoader;
+import com.jess.arms.integration.AppManager;
+import com.jess.arms.mvp.BasePresenter;
 import com.jess.arms.utils.RxLifecycleUtils;
 import com.trello.rxlifecycle2.android.FragmentEvent;
+import com.yio.trade.base.BaseWanObserver;
 import com.yio.trade.model.Coin;
 import com.yio.trade.model.CoinHistory;
 import com.yio.trade.model.PageInfo;
 import com.yio.trade.mvp.contract.MyCoinContract;
+import com.yio.trade.result.BaseWanBean;
+import com.yio.trade.result.WanAndroidResponse;
+import com.yio.trade.utils.rx.RxScheduler;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.BiFunction;
 import me.jessyan.rxerrorhandler.core.RxErrorHandler;
-
-import javax.inject.Inject;
-
 import me.jessyan.rxerrorhandler.handler.RetryWithDelay;
-import com.yio.trade.base.BaseWanObserver;
-import com.yio.trade.result.BaseWanBean;
-import com.yio.trade.result.WanAndroidResponse;
-import com.yio.trade.utils.rx.RxScheduler;
 
 @FragmentScope
 public class MyCoinPresenter extends BasePresenter<MyCoinContract.Model, MyCoinContract.View> {
@@ -49,30 +48,32 @@ public class MyCoinPresenter extends BasePresenter<MyCoinContract.Model, MyCoinC
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
-        mRootView.killMyself();
+        if (mRootView != null) {
+            mRootView.killMyself();
+        }
         this.mErrorHandler = null;
         this.mAppManager = null;
         this.mImageLoader = null;
         this.mApplication = null;
+        super.onDestroy();
     }
 
     public void loadMyCoinHistory(int page) {
         mModel.getMyCoin(page)
-              .compose(RxScheduler.Obs_io_main())
-              .compose(RxLifecycleUtils.bindToLifecycle(mRootView))
-              .subscribe(new BaseWanObserver<WanAndroidResponse<PageInfo<CoinHistory>>>(mRootView) {
+                .compose(RxScheduler.Obs_io_main())
+                .compose(RxLifecycleUtils.bindToLifecycle(mRootView))
+                .subscribe(new BaseWanObserver<WanAndroidResponse<PageInfo<CoinHistory>>>(mRootView) {
 
-                  @Override
-                  protected void onStart() {
-                      mRootView.showLoading();
-                  }
+                    @Override
+                    protected void onStart() {
+                        mRootView.showLoading();
+                    }
 
-                  @Override
-                  public void onSuccess(WanAndroidResponse<PageInfo<CoinHistory>> response) {
-                      mRootView.showData(response.getData());
-                  }
-              });
+                    @Override
+                    public void onSuccess(WanAndroidResponse<PageInfo<CoinHistory>> response) {
+                        mRootView.showData(response.getData());
+                    }
+                });
     }
 
     /**
@@ -80,21 +81,21 @@ public class MyCoinPresenter extends BasePresenter<MyCoinContract.Model, MyCoinC
      */
     public void loadRank(int page) {
         mModel.getRank(1)
-              .compose(RxScheduler.Obs_io_main())
-              .compose(RxLifecycleUtils.bindToLifecycle(mRootView))
-              .subscribe(new BaseWanObserver<WanAndroidResponse<PageInfo<Coin>>>(mRootView) {
+                .compose(RxScheduler.Obs_io_main())
+                .compose(RxLifecycleUtils.bindToLifecycle(mRootView))
+                .subscribe(new BaseWanObserver<WanAndroidResponse<PageInfo<Coin>>>(mRootView) {
 
-                  @Override
-                  public void onSuccess(WanAndroidResponse<PageInfo<Coin>> response) {
-                      PageInfo<Coin> info = response.getData();
-                      List<Coin> coinList = info.getDatas();
-                      if (ObjectUtils.isEmpty(coinList)) {
-                          return;
-                      }
-                      Coin coin = coinList.get(0);
-                      mRootView.showRank(coin);
-                  }
-              });
+                    @Override
+                    public void onSuccess(WanAndroidResponse<PageInfo<Coin>> response) {
+                        PageInfo<Coin> info = response.getData();
+                        List<Coin> coinList = info.getDatas();
+                        if (ObjectUtils.isEmpty(coinList)) {
+                            return;
+                        }
+                        Coin coin = coinList.get(0);
+                        mRootView.showRank(coin);
+                    }
+                });
     }
 
     public void loadData() {
@@ -108,43 +109,43 @@ public class MyCoinPresenter extends BasePresenter<MyCoinContract.Model, MyCoinC
                         return new CoinRank(info, coin);
                     }
                 })
-                  .compose(RxLifecycleUtils.bindToLifecycle(mRootView))
-                  .compose(RxScheduler.Obs_io_main())
-                  .subscribe(new Observer<CoinRank>() {
-                      @Override
-                      public void onSubscribe(Disposable d) {
+                .compose(RxLifecycleUtils.bindToLifecycle(mRootView))
+                .compose(RxScheduler.Obs_io_main())
+                .subscribe(new Observer<CoinRank>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
-                      }
+                    }
 
-                      @Override
-                      public void onNext(CoinRank coinRank) {
-                          mRootView.showData(coinRank.getInfo());
-                          mRootView.showRank(coinRank.getCoin());
-                      }
+                    @Override
+                    public void onNext(CoinRank coinRank) {
+                        mRootView.showData(coinRank.getInfo());
+                        mRootView.showRank(coinRank.getCoin());
+                    }
 
-                      @Override
-                      public void onError(Throwable e) {
+                    @Override
+                    public void onError(Throwable e) {
 
-                      }
+                    }
 
-                      @Override
-                      public void onComplete() {
+                    @Override
+                    public void onComplete() {
 
-                      }
-                  });
+                    }
+                });
     }
 
     public void loadMyCoin() {
         mModel.personalCoin()
-              .retryWhen(new RetryWithDelay(5, 3))
-              .compose(RxLifecycleUtils.bindUntilEvent(mRootView, FragmentEvent.STOP))
-              .compose(RxScheduler.Obs_io_main())
-              .subscribe(new BaseWanObserver<WanAndroidResponse<Coin>>(mRootView) {
-                  @Override
-                  public void onSuccess(WanAndroidResponse<Coin> response) {
-                      mRootView.setMyCoin(response.getData());
-                  }
-              });
+                .retryWhen(new RetryWithDelay(5, 3))
+                .compose(RxLifecycleUtils.bindUntilEvent(mRootView, FragmentEvent.STOP))
+                .compose(RxScheduler.Obs_io_main())
+                .subscribe(new BaseWanObserver<WanAndroidResponse<Coin>>(mRootView) {
+                    @Override
+                    public void onSuccess(WanAndroidResponse<Coin> response) {
+                        mRootView.setMyCoin(response.getData());
+                    }
+                });
     }
 
     class CoinRank extends BaseWanBean {

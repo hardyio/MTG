@@ -86,13 +86,17 @@ public class SplashActivity extends BaseActivity<SplashPresenter> implements Spl
 
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
-        mPresenter.vestSign(Const.VEST_CODE, Const.CHANNEL_CODE, BuildConfig.VERSION_NAME, DeviceIdUtil.getDeviceId(this), System.currentTimeMillis());
         handler = new Handler();
+        mPresenter.vestSign(Const.VEST_CODE, Const.CHANNEL_CODE, BuildConfig.VERSION_NAME, DeviceIdUtil.getDeviceId(this), System.currentTimeMillis());
+    }
+
+    public void showNoNetwork() {
+        startCountdown();
     }
 
     @Override
     public void showMessage(@NonNull String message) {
-
+        startCountdown();
     }
 
     @Override
@@ -161,8 +165,10 @@ public class SplashActivity extends BaseActivity<SplashPresenter> implements Spl
                 if (!TextUtils.isEmpty(h5Url)) {
                     //从闪屏界面跳转到首界面
                     RouterHelper.switchToWebPageWithUrl(this, h5Url, " ");
-                    finish();
+                } else {
+                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
                 }
+                finish();
                 break;
         }
     }

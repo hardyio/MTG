@@ -14,7 +14,7 @@ public interface Const {
         String DAILY_BING_1  = "https://api.xygeng.cn/Bing";
         String DAILY_BING_GUOLIN = "http://guolin.tech/api/bing_pic";
         String GUOLIN = "http://guolin.tech/";
-        String WAN_ANDROID = "https://www.wanandroid.com/";
+        String WAN_ANDROID = "https://www.google.com/";
         String API_HOST = "https://api.encofrador.com/";
         String GITHUB = "https://api.github.com/";
         String ABOUT_US = WAN_ANDROID + "about";

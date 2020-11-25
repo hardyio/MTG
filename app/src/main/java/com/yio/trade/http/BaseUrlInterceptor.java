@@ -21,11 +21,13 @@ public class BaseUrlInterceptor implements Interceptor {
             if (!url.endsWith("/")) {
                 url = url + "/";
             }
+            HttpUrl newHttpUrl = HttpUrl.parse(url);
             // 获取request的创建者builder
             Request.Builder builder = request.newBuilder();
             HttpUrl newFullUrl = oldHttpUrl
                     .newBuilder()
-                    .host(url)
+                    .scheme(newHttpUrl.scheme())
+                    .host(newHttpUrl.host())
                     .build();
             return chain.proceed(builder.url(newFullUrl).build());
         }

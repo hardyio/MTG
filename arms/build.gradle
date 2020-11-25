@@ -19,7 +19,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -41,7 +41,7 @@ dependencies {
     api rootProject.ext.dependencies["annotations"]
 
     //view
-    compileOnly rootProject.ext.dependencies["autolayout"]
+//    compileOnly rootProject.ext.dependencies["autolayout"]
     api(rootProject.ext.dependencies["butterknife"]) {
         exclude module: 'annotation'
         exclude module: 'core'

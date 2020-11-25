@@ -39,6 +39,10 @@ import static com.jess.arms.utils.Preconditions.checkNotNull;
  */
 public interface IView {
 
+    default void showNoNetwork(){
+
+    }
+
     /**
      * 显示加载
      */
@@ -76,4 +80,9 @@ public interface IView {
     default void killMyself() {
 
     }
+
+    default void showError(String mErroMessage){
+
+    }
+
 }

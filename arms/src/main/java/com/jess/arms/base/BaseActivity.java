@@ -43,8 +43,6 @@ import butterknife.Unbinder;
 import io.reactivex.subjects.BehaviorSubject;
 import io.reactivex.subjects.Subject;
 
-import static com.jess.arms.utils.ThirdViewUtil.convertAutoView;
-
 /**
  * ================================================
  * 因为 Java 只能单继承, 所以如果要用到需要继承特定 {@link Activity} 的三方库, 那你就需要自己自定义 {@link Activity}
@@ -86,7 +84,8 @@ public abstract class BaseActivity<P extends IPresenter> extends AppCompatActivi
 
     @Override
     public View onCreateView(String name, Context context, AttributeSet attrs) {
-        View view = convertAutoView(name, context, attrs);
+        View view = null;
+//        View view = convertAutoView(name, context, attrs);
         return view == null ? super.onCreateView(name, context, attrs) : view;
     }
 

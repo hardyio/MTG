@@ -13,7 +13,7 @@ ext {
             versionCode      : 1,
             versionName      : "1.0.0",
             keyAlias         : properties.getProperty('keyAlias'),
-            keyPassword      : properties.getProperty('keandroid.toolsyPassword'),
+            keyPassword      : properties.getProperty('keyPassword'),
             storePassword    : properties.getProperty('storePassword'),
             storeFile        : "${rootDir.absolutePath}/keystore/MTGTrade.jks",
     ]

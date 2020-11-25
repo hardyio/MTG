@@ -177,9 +177,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         builder.setWhen(createTime);
         String brand = Build.BRAND;
         PendingIntent intent = setPendingIntent(context, pushMessageModel);
-        builder.setSmallIcon(R.mipmap.ic_launcher);
+        builder.setSmallIcon(R.mipmap.ic_launcher_backup);
         if (!TextUtils.isEmpty(brand) && brand.equalsIgnoreCase("samsung")) {
-            Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher);
+            Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher_backup);
             builder.setLargeIcon(bitmap);
         }
         builder.setContentIntent(intent);
@@ -229,6 +229,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             intent = new Intent(context, WebActivity.class);
             intent.putExtra(Const.Key.KEY_WEB_PAGE_TYPE, WebActivity.TYPE_URL);
             intent.putExtra(Const.Key.KEY_WEB_PAGE_URL, url);
+            intent.putExtra(Const.Key.KEY_WEB_PAGE_TITLE, "");
         }
         return PendingIntent.getActivity(
                 context,
