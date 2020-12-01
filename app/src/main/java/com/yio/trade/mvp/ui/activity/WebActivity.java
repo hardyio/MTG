@@ -323,9 +323,8 @@ public class WebActivity extends BaseActivity<WebPresenter> implements WebContra
                     return;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     Uri[] uris = WebChromeClient.FileChooserParams.parseResult(resultCode, data);
-                    File file = getFileByUri(uris[0]);
-//                    String path = getPath(this, uris[0]);
-                    webView.setSelectFile(file);
+                    String path = RxFileTool.getPathFromUri(this, uris[0]);
+                    webView.setSelectFile(new File(path));
                     webView.uploadMessageArr.onReceiveValue(uris);
                 }
                 webView.uploadMessageArr = null;
@@ -387,25 +386,6 @@ public class WebActivity extends BaseActivity<WebPresenter> implements WebContra
                         // ...
                     }
                 });
-    }
-
-    public static String getPath(final Context context, final Uri uri) {
-        final String docId = DocumentsContract.getDocumentId(uri);
-        final String[] split = docId.split(":");
-        final String type = split[0];
-
-        Uri contentUri = null;
-        if ("image".equals(type)) {
-            contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-        } else if ("video".equals(type)) {
-            contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-        } else if ("audio".equals(type)) {
-            contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-        }
-
-        final String selection = "_id=?";
-        final String[] selectionArgs = new String[]{split[1]};
-        return RxFileTool.getDataColumn(context, contentUri, selection, selectionArgs);
     }
 
     public File getFileByUri(Uri uri) {
