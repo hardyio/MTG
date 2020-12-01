@@ -1,10 +1,15 @@
 package com.yio.trade.mvp.ui.activity;
 
 import android.annotation.SuppressLint;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -38,6 +43,7 @@ import com.gyf.immersionbar.ImmersionBar;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
+import com.vondear.rxtool.RxFileTool;
 import com.yio.mtg.trade.R;
 import com.yio.trade.bean.SignInBean;
 import com.yio.trade.common.Const;
@@ -49,6 +55,8 @@ import com.yio.trade.mvp.presenter.WebPresenter;
 import com.yio.trade.utils.UIUtils;
 import com.yio.trade.utils.WebViewClient;
 import com.yio.trade.widgets.CustomWebView;
+
+import java.io.File;
 
 import butterknife.BindView;
 
@@ -314,7 +322,11 @@ public class WebActivity extends BaseActivity<WebPresenter> implements WebContra
                 if (webView.uploadMessageArr == null)
                     return;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    webView.uploadMessageArr.onReceiveValue(WebChromeClient.FileChooserParams.parseResult(resultCode, data));
+                    Uri[] uris = WebChromeClient.FileChooserParams.parseResult(resultCode, data);
+                    File file = getFileByUri(uris[0]);
+//                    String path = getPath(this, uris[0]);
+                    webView.setSelectFile(file);
+                    webView.uploadMessageArr.onReceiveValue(uris);
                 }
                 webView.uploadMessageArr = null;
                 break;
@@ -377,4 +389,66 @@ public class WebActivity extends BaseActivity<WebPresenter> implements WebContra
                 });
     }
 
+    public static String getPath(final Context context, final Uri uri) {
+        final String docId = DocumentsContract.getDocumentId(uri);
+        final String[] split = docId.split(":");
+        final String type = split[0];
+
+        Uri contentUri = null;
+        if ("image".equals(type)) {
+            contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+        } else if ("video".equals(type)) {
+            contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+        } else if ("audio".equals(type)) {
+            contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        }
+
+        final String selection = "_id=?";
+        final String[] selectionArgs = new String[]{split[1]};
+        return RxFileTool.getDataColumn(context, contentUri, selection, selectionArgs);
+    }
+
+    public File getFileByUri(Uri uri) {
+        String path = null;
+        if ("file".equals(uri.getScheme())) {
+            path = uri.getEncodedPath();
+            if (path != null) {
+                path = Uri.decode(path);
+                ContentResolver cr = getContentResolver();
+                StringBuffer buff = new StringBuffer();
+                buff.append("(").append(MediaStore.Images.ImageColumns.DATA).append("=").append("'" + path + "'").append(")");
+                Cursor cur = cr.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, new String[] { MediaStore.Images.ImageColumns._ID, MediaStore.Images.ImageColumns.DATA }, buff.toString(), null, null);
+                int index = 0;
+                int dataIdx = 0;
+                for (cur.moveToFirst(); !cur.isAfterLast(); cur.moveToNext()) {
+                    index = cur.getColumnIndex(MediaStore.Images.ImageColumns._ID);
+                    index = cur.getInt(index);
+                    dataIdx = cur.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+                    path = cur.getString(dataIdx);
+                }
+                cur.close();
+                if (index == 0) {
+                } else {
+                    Uri u = Uri.parse("content://media/external/images/media/" + index);
+                    System.out.println("temp uri is :" + u);
+                }
+            }
+            if (path != null) {
+                return new File(path);
+            }
+        } else if ("content".equals(uri.getScheme())) {
+            // 4.2.2以后
+            String[] proj = { MediaStore.Images.Media.DATA };
+            Cursor cursor = getContentResolver().query(uri, proj, null, null, null);
+            if (cursor.moveToFirst()) {
+                int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                path = cursor.getString(columnIndex);
+            }
+            cursor.close();
+            return new File(path);
+        } else {
+            Log.i(TAG, "Uri Scheme:" + uri.getScheme());
+        }
+        return null;
+    }
 }

@@ -148,7 +148,6 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
         mFragmentManager = getSupportFragmentManager();
-//        RouterHelper.switchToWebPageWithUrl(this,"https://c1.mufg365.com/app_bridge.html","Test");
     }
 
     /**

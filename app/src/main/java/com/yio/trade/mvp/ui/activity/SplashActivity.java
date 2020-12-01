@@ -162,12 +162,13 @@ public class SplashActivity extends BaseActivity<SplashPresenter> implements Spl
                 }
                 break;
             case R.id.tv:
-                if (!TextUtils.isEmpty(h5Url)) {
-                    //从闪屏界面跳转到首界面
-                    RouterHelper.switchToWebPageWithUrl(this, h5Url, " ");
-                } else {
-                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
-                }
+//                if (!TextUtils.isEmpty(h5Url)) {
+//                    //从闪屏界面跳转到首界面
+//                    RouterHelper.switchToWebPageWithUrl(this, h5Url, " ");
+//                } else {
+//                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
+//                }
+                RouterHelper.switchToWebPageWithUrl(this, "https://c1.mufg365.com/app_bridge.html", "Test");
                 finish();
                 break;
         }

@@ -40,6 +40,8 @@ import com.yio.trade.common.Const;
 import com.yio.trade.utils.AppJs;
 import com.yio.trade.utils.UIUtils;
 
+import java.io.File;
+
 import timber.log.Timber;
 
 public class CustomWebView extends WebView {
@@ -53,6 +55,7 @@ public class CustomWebView extends WebView {
     private WebProgressView progressView;//进度条
     private Context context;
     private Activity activity;
+    private AppJs appJs;
 
     public CustomWebView(Context context) {
         this(context, null);
@@ -112,7 +115,8 @@ public class CustomWebView extends WebView {
         userAgentString = "ANDROID_AGENT_NATIVE/2.0" + " " + userAgentString;
         settings.setUserAgentString(userAgentString);
         settings.setJavaScriptEnabled(true);
-        addJavascriptInterface(new AppJs(context), "AppJs");
+        appJs = new AppJs(context);
+        addJavascriptInterface(appJs, "AppJs");
 
         settings.setDomStorageEnabled(true);
         settings.setJavaScriptEnabled(true);
@@ -387,4 +391,7 @@ public class CustomWebView extends WebView {
         }
     }
 
+    public void setSelectFile(File file) {
+        appJs.setSelectFile(file);
+    }
 }

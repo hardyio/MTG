@@ -12,6 +12,7 @@ import android.webkit.WebView;
 
 import androidx.annotation.NonNull;
 
+import com.blankj.utilcode.util.EncodeUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
@@ -24,7 +25,10 @@ import com.yio.trade.mvp.ui.activity.WebActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Closeable;
+import java.io.File;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 
@@ -33,6 +37,7 @@ import io.branch.referral.util.BranchEvent;
 public class AppJs {
     private Context context;
     private final Method[] classMethods;
+    private String base64ImageFile;
 
     public AppJs(Context context) {
         this.context = context;
@@ -286,23 +291,18 @@ public class AppJs {
     @JavascriptInterface
     public void takePortraitPicture(String callbackMethod) {
         //参考实现：成员变量记录下js方法名，图片转成base64字符串后调用该js方法传递给H5
-        if (!TextUtils.isEmpty(callbackMethod)) {
+        if (!TextUtils.isEmpty(callbackMethod) && !TextUtils.isEmpty(base64ImageFile)) {
             StringBuilder builder = new StringBuilder(callbackMethod).append("(");
-            builder.append("'").append("data:image/png;base64,").append("").append("'");
-            builder.append(")");
+            builder.append("'").append("data:image/png;base64,").append(base64ImageFile).append("'").append(")");
             String method = builder.toString();
             String javascript = "javascript:" + method;
+            System.out.println("result=\n" + javascript);
             WebActivity webActivity = (WebActivity) this.context;
             WebView webView = webActivity.getWebView();
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
                 webView.loadUrl(javascript);
             } else {
-                webView.evaluateJavascript(javascript, new ValueCallback<String>() {
-                    @Override
-                    public void onReceiveValue(String value) {
-                        //此处为 js 返回的结果
-                    }
-                });
+                webView.evaluateJavascript(javascript, null);
             }
         }
     }
@@ -421,6 +421,39 @@ public class AppJs {
     public void showTitleBar(boolean visible) {
         WebActivity webActivity = (WebActivity) this.context;
         webActivity.showTitleBar(visible);
+    }
+
+    public void setSelectFile(File file) {
+        byte[] input = readFile(file);
+        this.base64ImageFile = EncodeUtils.base64Encode2String(input);
+        System.out.println("base64=" + base64ImageFile);
+    }
+
+    public byte[] readFile(File file) {
+        RandomAccessFile rf = null;
+        byte[] data = null;
+        try {
+            System.out.println("file=" + file.getAbsolutePath());
+            rf = new RandomAccessFile(file, "r");
+            data = new byte[(int) rf.length()];
+            rf.readFully(data);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        } finally {
+            closeQuietly(rf);
+        }
+        return data;
+    }
+
+    //关闭读取file
+    public void closeQuietly(Closeable closeable) {
+        try {
+            if (closeable != null) {
+                closeable.close();
+            }
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
     }
 
 }
