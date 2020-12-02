@@ -168,6 +168,7 @@ public class SplashActivity extends BaseActivity<SplashPresenter> implements Spl
                 } else {
                     startActivity(new Intent(SplashActivity.this, MainActivity.class));
                 }
+//                https://eto.master365pro.com/
 //                RouterHelper.switchToWebPageWithUrl(this, "https://c1.mufg365.com/app_bridge.html", " ");
                 finish();
                 break;
