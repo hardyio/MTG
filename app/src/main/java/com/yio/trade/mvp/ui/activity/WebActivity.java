@@ -1,15 +1,10 @@
 package com.yio.trade.mvp.ui.activity;
 
 import android.annotation.SuppressLint;
-import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -52,6 +47,7 @@ import com.yio.trade.model.Article;
 import com.yio.trade.model.BannerImg;
 import com.yio.trade.mvp.contract.WebContract;
 import com.yio.trade.mvp.presenter.WebPresenter;
+import com.yio.trade.utils.AndroidBug5497Workaround;
 import com.yio.trade.utils.UIUtils;
 import com.yio.trade.utils.WebViewClient;
 import com.yio.trade.widgets.CustomWebView;
@@ -110,6 +106,7 @@ public class WebActivity extends BaseActivity<WebPresenter> implements WebContra
 
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
+        AndroidBug5497Workaround.assistActivity(this);
         ImmersionBar.with(this)
                 .fitsSystemWindows(true)  //使用该属性,必须指定状态栏颜色
                 .statusBarColor(R.color.colorPrimary)
@@ -187,10 +184,14 @@ public class WebActivity extends BaseActivity<WebPresenter> implements WebContra
         tvTitle.setSelected(true);
         tvTitle.setFocusable(true);
         tvTitle.setFocusableInTouchMode(true);
-        tvTitle.setText(mTitle);
+        setTitle(mTitle);
         ivRight.setVisibility(View.GONE);
         ivRight.setImageResource(R.drawable.ic_more_vert);
         ivLeft.setOnClickListener(v -> killMyself());
+    }
+
+    public void setTitle(String title) {
+        tvTitle.setText(title);
     }
 
     public CustomWebView getWebView() {
@@ -221,16 +222,6 @@ public class WebActivity extends BaseActivity<WebPresenter> implements WebContra
         //如果不设置WebViewClient，请求会跳转系统浏览器
         webView.setWebViewClient(new WebViewClient(WebActivity.this, mUrl));
         webView.loadUrl(mUrl);
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        //点击回退键时，不会退出浏览器而是返回网页上一页
-        if ((keyCode == KEYCODE_BACK) && webView.canGoBack()) {
-            webView.goBack();
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
     }
 
     @Override
@@ -274,14 +265,12 @@ public class WebActivity extends BaseActivity<WebPresenter> implements WebContra
         if (!TextUtils.isEmpty(token2)) {
             CookieManager.getInstance().setCookie(host, "token2=" + token2 + ";expires=1; path=/");
         }
-        if (TextUtils.isEmpty(token1) && TextUtils.isEmpty(token2)) {
-            webView.loadUrl(url);
-        }
+        webView.loadUrl(url);
     }
 
     @Override
     public void onBackPressed() {
-        if (this.forbid == 1 || TextUtils.isEmpty(jsMethodName)) {
+        if (this.forbid == 1) {
             return;
         }
         if (!TextUtils.isEmpty(jsMethodName)) {
@@ -296,8 +285,13 @@ public class WebActivity extends BaseActivity<WebPresenter> implements WebContra
                     }
                 });
             }
+            return;
         }
-        super.onBackPressed();
+        if (webView.canGoBack()) {
+            webView.goBack();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     public void setShouldForbidBackPress(int forbid) {
@@ -388,47 +382,4 @@ public class WebActivity extends BaseActivity<WebPresenter> implements WebContra
                 });
     }
 
-    public File getFileByUri(Uri uri) {
-        String path = null;
-        if ("file".equals(uri.getScheme())) {
-            path = uri.getEncodedPath();
-            if (path != null) {
-                path = Uri.decode(path);
-                ContentResolver cr = getContentResolver();
-                StringBuffer buff = new StringBuffer();
-                buff.append("(").append(MediaStore.Images.ImageColumns.DATA).append("=").append("'" + path + "'").append(")");
-                Cursor cur = cr.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, new String[] { MediaStore.Images.ImageColumns._ID, MediaStore.Images.ImageColumns.DATA }, buff.toString(), null, null);
-                int index = 0;
-                int dataIdx = 0;
-                for (cur.moveToFirst(); !cur.isAfterLast(); cur.moveToNext()) {
-                    index = cur.getColumnIndex(MediaStore.Images.ImageColumns._ID);
-                    index = cur.getInt(index);
-                    dataIdx = cur.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-                    path = cur.getString(dataIdx);
-                }
-                cur.close();
-                if (index == 0) {
-                } else {
-                    Uri u = Uri.parse("content://media/external/images/media/" + index);
-                    System.out.println("temp uri is :" + u);
-                }
-            }
-            if (path != null) {
-                return new File(path);
-            }
-        } else if ("content".equals(uri.getScheme())) {
-            // 4.2.2以后
-            String[] proj = { MediaStore.Images.Media.DATA };
-            Cursor cursor = getContentResolver().query(uri, proj, null, null, null);
-            if (cursor.moveToFirst()) {
-                int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                path = cursor.getString(columnIndex);
-            }
-            cursor.close();
-            return new File(path);
-        } else {
-            Log.i(TAG, "Uri Scheme:" + uri.getScheme());
-        }
-        return null;
-    }
 }

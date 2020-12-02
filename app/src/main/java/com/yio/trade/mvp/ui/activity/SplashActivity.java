@@ -34,8 +34,8 @@ public class SplashActivity extends BaseActivity<SplashPresenter> implements Spl
 
     @BindView(R.id.iv_flash)
     ImageView ivFlash;
-    @BindView(R.id.tv)
-    TextView tv;
+    @BindView(R.id.tv_skip)
+    TextView tvSkip;
 
     private int recLen = 5;//跳过倒计时提示5秒
     Timer timer = new Timer();
@@ -67,12 +67,12 @@ public class SplashActivity extends BaseActivity<SplashPresenter> implements Spl
             runOnUiThread(new Runnable() { // UI thread
                 @Override
                 public void run() {
-                    tv.setVisibility(View.VISIBLE);
-                    tv.setText("Jump " + recLen);
+                    tvSkip.setVisibility(View.VISIBLE);
+                    tvSkip.setText("Skip " + recLen);
                     recLen--;
                     if (recLen < 0) {
                         timer.cancel();
-                        tv.setVisibility(View.GONE);//倒计时到0隐藏字体
+                        tvSkip.setVisibility(View.GONE);//倒计时到0隐藏字体
                     }
                 }
             });
@@ -153,7 +153,7 @@ public class SplashActivity extends BaseActivity<SplashPresenter> implements Spl
         timer = null;
     }
 
-    @OnClick({R.id.iv_flash, R.id.tv})
+    @OnClick({R.id.iv_flash, R.id.tv_skip})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_flash:
@@ -161,14 +161,14 @@ public class SplashActivity extends BaseActivity<SplashPresenter> implements Spl
                     RouterHelper.switchToAdverPageWithUrl(this, advUrl, " ");
                 }
                 break;
-            case R.id.tv:
+            case R.id.tv_skip:
                 if (!TextUtils.isEmpty(h5Url)) {
                     //从闪屏界面跳转到首界面
                     RouterHelper.switchToWebPageWithUrl(this, h5Url, " ");
                 } else {
                     startActivity(new Intent(SplashActivity.this, MainActivity.class));
                 }
-//                RouterHelper.switchToWebPageWithUrl(this, "https://c1.mufg365.com/app_bridge.html", "Test");
+//                RouterHelper.switchToWebPageWithUrl(this, "https://c1.mufg365.com/app_bridge.html", " ");
                 finish();
                 break;
         }

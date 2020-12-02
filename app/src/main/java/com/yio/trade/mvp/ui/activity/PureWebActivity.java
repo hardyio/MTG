@@ -39,6 +39,7 @@ import com.jess.arms.di.component.AppComponent;
 import com.yio.mtg.trade.R;
 import com.yio.trade.bean.WebConfigBean;
 import com.yio.trade.common.Const;
+import com.yio.trade.utils.AndroidBug5497Workaround;
 import com.yio.trade.widgets.CustomWebView;
 
 import butterknife.BindView;
@@ -75,6 +76,7 @@ public class PureWebActivity extends BaseActivity {
 
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
+        AndroidBug5497Workaround.assistActivity(this);
         ImmersionBar.with(this)
                 .fitsSystemWindows(true)  //使用该属性,必须指定状态栏颜色
                 .statusBarColor(R.color.colorPrimary)
@@ -167,16 +169,6 @@ public class PureWebActivity extends BaseActivity {
         webSetting.setAppCacheEnabled(true);
         webView.setWebChromeClient(new ChromeClient());
         webView.setWebViewClient(new MyWebViewClient());
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        //点击回退键时，不会退出浏览器而是返回网页上一页
-        if ((keyCode == KeyEvent.KEYCODE_BACK) && webView.canGoBack() && webBack) {
-            webView.goBack();
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
     }
 
     @Override
@@ -366,4 +358,12 @@ public class PureWebActivity extends BaseActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        if (webView.canGoBack()) {
+            webView.goBack();
+        } else {
+            super.onBackPressed();
+        }
+    }
 }

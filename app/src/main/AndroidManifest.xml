@@ -62,13 +62,11 @@
         <activity
             android:name="com.yio.trade.mvp.ui.activity.WebActivity"
             android:configChanges="keyboard|keyboardHidden|screenSize|fontScale|density|orientation|uiMode"
-            android:launchMode="singleTop"
-            android:windowSoftInputMode="adjustPan" />
+            android:launchMode="singleTop" />
         <activity
             android:name="com.yio.trade.mvp.ui.activity.PureWebActivity"
             android:configChanges="keyboard|keyboardHidden|screenSize|fontScale|density|orientation|uiMode"
-            android:launchMode="singleTop"
-            android:windowSoftInputMode="adjustPan" />
+            android:launchMode="singleTop"/>
         <activity
             android:name="com.yio.trade.mvp.ui.activity.TodoEditActivity"
             android:configChanges="keyboard|keyboardHidden|screenSize|fontScale|density|orientation|uiMode"

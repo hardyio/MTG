@@ -292,18 +292,22 @@ public class AppJs {
     public void takePortraitPicture(String callbackMethod) {
         //参考实现：成员变量记录下js方法名，图片转成base64字符串后调用该js方法传递给H5
         if (!TextUtils.isEmpty(callbackMethod) && !TextUtils.isEmpty(base64ImageFile)) {
-            StringBuilder builder = new StringBuilder(callbackMethod).append("(");
-            builder.append("'").append("data:image/png;base64,").append(base64ImageFile).append("'").append(")");
-            String method = builder.toString();
-            String javascript = "javascript:" + method;
-            System.out.println("result=\n" + javascript);
+            String value = "\"" + "data:image/png;base64," + base64ImageFile + "\"";
+            String javascript = "javascript:" + callbackMethod + "(" + value + ")";
             WebActivity webActivity = (WebActivity) this.context;
-            WebView webView = webActivity.getWebView();
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-                webView.loadUrl(javascript);
-            } else {
-                webView.evaluateJavascript(javascript, null);
-            }
+            webActivity.runOnUiThread(() -> {
+                WebView webView = webActivity.getWebView();
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+                    webView.loadUrl(javascript);
+                } else {
+                    webView.evaluateJavascript(javascript, new ValueCallback<String>() {
+                        @Override
+                        public void onReceiveValue(String value) {
+                            //此处为 js 返回的结果
+                        }
+                    });
+                }
+            });
         }
     }
 
@@ -343,8 +347,8 @@ public class AppJs {
     }
 
     /**
-     * 是否禁用系统返回键
-     * 1 禁止
+     * 由h5控制是否禁用系统返回键
+     * @param forbid     是否禁止返回键 1:禁止
      */
     @JavascriptInterface
     public void shouldForbidSysBackPress(int forbid) {
@@ -354,10 +358,10 @@ public class AppJs {
     }
 
     /**
-     * 返回键调用h5控制
+     * 由h5控制返回键功能
      *
-     * @param forbid     是否禁止返回键 1 禁止
-     * @param methodName 反回时调用的h5方法 例如:detailBack() 不需要时传空串只禁止返回
+     * @param forbid     是否禁止返回键 1:禁止
+     * @param methodName 反回时调用的h5方法 例如:detailBack() webview需要执行javascrept:detailBack()
      */
     @JavascriptInterface
     public void forbidBackForJS(int forbid, String methodName) {
@@ -426,6 +430,8 @@ public class AppJs {
     public void setSelectFile(File file) {
         byte[] input = readFile(file);
         this.base64ImageFile = EncodeUtils.base64Encode2String(input);
+        int length = this.base64ImageFile.length();
+        System.out.println("length=" + length);
         System.out.println("base64=" + base64ImageFile);
     }
 

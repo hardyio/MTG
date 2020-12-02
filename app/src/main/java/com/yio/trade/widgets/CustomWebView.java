@@ -7,19 +7,16 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Message;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.ConsoleMessage;
 import android.webkit.DownloadListener;
-import android.webkit.JsPromptResult;
-import android.webkit.JsResult;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
@@ -37,6 +34,7 @@ import androidx.core.content.ContextCompat;
 import com.blankj.utilcode.util.ActivityUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.yio.trade.common.Const;
+import com.yio.trade.mvp.ui.activity.WebActivity;
 import com.yio.trade.utils.AppJs;
 import com.yio.trade.utils.UIUtils;
 
@@ -61,8 +59,11 @@ public class CustomWebView extends WebView {
         this(context, null);
     }
 
+    /**
+     * 不能直接调用this(context, attrs,0),最后style是0的话，会导致无法响应点击动作。
+     */
     public CustomWebView(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
+        this(context, attrs, Resources.getSystem().getIdentifier("webViewStyle", "attr", "android"));
     }
 
     public CustomWebView(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -85,8 +86,8 @@ public class CustomWebView extends WebView {
         addView(progressView);
         //初始化设置
         initWebSettings();
-        setWebChromeClient(new MyWebCromeClient());
-        setWebViewClient(new MyWebviewClient());
+        setWebChromeClient(new MyWebChromeClient());
+        setWebViewClient(new MyWebViewClient());
     }
 
     @SuppressLint("JavascriptInterface")
@@ -173,7 +174,7 @@ public class CustomWebView extends WebView {
     }
 
 
-    private class MyWebCromeClient extends WebChromeClient {
+    private class MyWebChromeClient extends WebChromeClient {
         @Override
         public void onProgressChanged(WebView view, int newProgress) {
             if (newProgress == 100) {
@@ -189,41 +190,9 @@ public class CustomWebView extends WebView {
         @Override
         public void onReceivedTitle(WebView view, String title) {
             super.onReceivedTitle(view, title);
-        }
-
-        @Override
-        public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
-            return super.onJsAlert(view, url, message, result);
-        }
-
-        @Override
-        public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
-            return super.onConsoleMessage(consoleMessage);
-        }
-
-        @Override
-        public boolean onCreateWindow(WebView view, boolean isDialog, boolean isUserGesture, Message resultMsg) {
-            return super.onCreateWindow(view, isDialog, isUserGesture, resultMsg);
-        }
-
-        @Override
-        public boolean onJsBeforeUnload(WebView view, String url, String message, JsResult result) {
-            return super.onJsBeforeUnload(view, url, message, result);
-        }
-
-        @Override
-        public boolean onJsConfirm(WebView view, String url, String message, JsResult result) {
-            return super.onJsConfirm(view, url, message, result);
-        }
-
-        @Override
-        public boolean onJsPrompt(WebView view, String url, String message, String defaultValue, JsPromptResult result) {
-            return super.onJsPrompt(view, url, message, defaultValue, result);
-        }
-
-        @Override
-        public void onCloseWindow(WebView window) {
-            super.onCloseWindow(window);
+            if (!TextUtils.isEmpty(title)) {
+                ((WebActivity) activity).setTitle(title);
+            }
         }
 
         @Override
@@ -330,7 +299,7 @@ public class CustomWebView extends WebView {
         return true;
     }
 
-    private class MyWebviewClient extends WebViewClient {
+    private class MyWebViewClient extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             Uri uri = Uri.parse(url);
@@ -380,8 +349,11 @@ public class CustomWebView extends WebView {
 
         @Override
         public void onPageFinished(WebView view, String url) {
-            Timber.e("onPageFinished");
             super.onPageFinished(view, url);
+            String title = view.getTitle();
+            if (!TextUtils.isEmpty(title)) {
+                ((WebActivity) activity).setTitle(title);
+            }
         }
 
         @Override
