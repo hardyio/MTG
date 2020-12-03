@@ -38,6 +38,7 @@ public class AppJs {
     private Context context;
     private final Method[] classMethods;
     private String base64ImageFile;
+    private String callbackMethod;
 
     public AppJs(Context context) {
         this.context = context;
@@ -290,25 +291,10 @@ public class AppJs {
      */
     @JavascriptInterface
     public void takePortraitPicture(String callbackMethod) {
-        //参考实现：成员变量记录下js方法名，图片转成base64字符串后调用该js方法传递给H5
-        if (!TextUtils.isEmpty(callbackMethod) && !TextUtils.isEmpty(base64ImageFile)) {
-            String value = "\"" + "data:image/png;base64," + base64ImageFile + "\"";
-            String javascript = "javascript:" + callbackMethod + "(" + value + ")";
-            WebActivity webActivity = (WebActivity) this.context;
-            webActivity.runOnUiThread(() -> {
-                WebView webView = webActivity.getWebView();
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-                    webView.loadUrl(javascript);
-                } else {
-                    webView.evaluateJavascript(javascript, new ValueCallback<String>() {
-                        @Override
-                        public void onReceiveValue(String value) {
-                            //此处为 js 返回的结果
-                        }
-                    });
-                }
-            });
-        }
+        //System.out.println("takePortraitPicture");
+        WebActivity webActivity = (WebActivity) this.context;
+        webActivity.selectImage();
+        this.callbackMethod = callbackMethod;
     }
 
     /**
@@ -430,9 +416,7 @@ public class AppJs {
     public void setSelectFile(File file) {
         byte[] input = readFile(file);
         this.base64ImageFile = EncodeUtils.base64Encode2String(input);
-        int length = this.base64ImageFile.length();
-        System.out.println("length=" + length);
-        System.out.println("base64=" + base64ImageFile);
+        //System.out.println("base64=" + base64ImageFile);
     }
 
     public byte[] readFile(File file) {
@@ -462,4 +446,26 @@ public class AppJs {
         }
     }
 
+    public void uploadImage(File file) {
+        setSelectFile(file);
+        //参考实现：成员变量记录下js方法名，图片转成base64字符串后调用该js方法传递给H5
+        if (!TextUtils.isEmpty(callbackMethod) && !TextUtils.isEmpty(base64ImageFile)) {
+            String value = "\"" + "data:image/png;base64," + base64ImageFile + "\"";
+            String javascript = "javascript:" + callbackMethod + "(" + value + ")";
+            WebActivity webActivity = (WebActivity) this.context;
+            webActivity.runOnUiThread(() -> {
+                WebView webView = webActivity.getWebView();
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+                    webView.loadUrl(javascript);
+                } else {
+                    webView.evaluateJavascript(javascript, new ValueCallback<String>() {
+                        @Override
+                        public void onReceiveValue(String value) {
+                            //此处为 js 返回的结果
+                        }
+                    });
+                }
+            });
+        }
+    }
 }

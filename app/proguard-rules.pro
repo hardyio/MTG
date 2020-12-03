@@ -345,5 +345,8 @@
 -keepclassmembers class * extends android.webkit.WebViewClient {
     public void *(android.webkit.WebView, jav.lang.String);
 }
+-keepclassmembers class * extends android.webkit.WebChromeClient{
+    public void openFileChooser(...);
+}
 #----------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------

@@ -53,7 +53,6 @@ import com.yio.trade.mvp.contract.ContainerContract;
 import com.yio.trade.mvp.presenter.ContainerPresenter;
 import com.yio.trade.mvp.ui.activity.MainActivity;
 import com.yio.trade.mvp.ui.activity.SearchActivity;
-import com.yio.trade.mvp.ui.activity.SettingsActivity;
 import com.yio.trade.mvp.ui.activity.WebActivity;
 import com.yio.trade.utils.RxPhotoTool;
 import com.yio.trade.utils.UIUtils;

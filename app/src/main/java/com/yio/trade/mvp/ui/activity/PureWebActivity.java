@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
@@ -183,7 +182,7 @@ public class PureWebActivity extends BaseActivity {
                 }
                 uploadMessageArr = null;
                 break;
-            case CustomWebView.FILECHOOSER_RESULTCODE:
+            case CustomWebView.FILECHOOSER_RESULT_CODE:
                 if (null == uploadMessage)
                     return;
                 // Use MainActivity.RESULT_OK if you're implementing WebView inside Fragment

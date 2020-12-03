@@ -7,7 +7,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.ValueCallback;
@@ -23,6 +22,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.ToastUtils;
+import com.blankj.utilcode.util.UriUtils;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -38,7 +38,6 @@ import com.gyf.immersionbar.ImmersionBar;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
-import com.vondear.rxtool.RxFileTool;
 import com.yio.mtg.trade.R;
 import com.yio.trade.bean.SignInBean;
 import com.yio.trade.common.Const;
@@ -56,7 +55,6 @@ import java.io.File;
 
 import butterknife.BindView;
 
-import static android.view.KeyEvent.KEYCODE_BACK;
 import static com.jess.arms.utils.Preconditions.checkNotNull;
 
 public class WebActivity extends BaseActivity<WebPresenter> implements WebContract.View {
@@ -308,22 +306,32 @@ public class WebActivity extends BaseActivity<WebPresenter> implements WebContra
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
+    public void selectImage() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            webView.selectImageForLollipop(null);
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case CustomWebView.REQUEST_SELECT_FILE:
-                if (webView.uploadMessageArr == null)
-                    return;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     Uri[] uris = WebChromeClient.FileChooserParams.parseResult(resultCode, data);
-                    String path = RxFileTool.getPathFromUri(this, uris[0]);
-                    webView.setSelectFile(new File(path));
-                    webView.uploadMessageArr.onReceiveValue(uris);
+                    if (uris != null) {
+                        File photoFile = UriUtils.uri2File(uris[0]);
+                        if (webView.uploadMessageArr == null) {
+                            webView.uploadImage(photoFile);
+                        } else {
+                            webView.setSelectFile(photoFile);
+                            webView.uploadMessageArr.onReceiveValue(uris);
+                        }
+                    }
                 }
                 webView.uploadMessageArr = null;
                 break;
-            case CustomWebView.FILECHOOSER_RESULTCODE:
+            case CustomWebView.FILECHOOSER_RESULT_CODE:
                 if (null == webView.uploadMessage)
                     return;
                 // Use MainActivity.RESULT_OK if you're implementing WebView inside Fragment

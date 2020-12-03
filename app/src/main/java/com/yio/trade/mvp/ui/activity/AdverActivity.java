@@ -42,13 +42,10 @@ import com.yio.mtg.trade.R;
 import com.yio.trade.bean.SignInBean;
 import com.yio.trade.common.Const;
 import com.yio.trade.di.component.DaggerAdverComponent;
-import com.yio.trade.di.component.DaggerWebComponent;
 import com.yio.trade.model.Article;
 import com.yio.trade.model.BannerImg;
 import com.yio.trade.mvp.contract.AdverContract;
-import com.yio.trade.mvp.contract.WebContract;
 import com.yio.trade.mvp.presenter.AdverPresenter;
-import com.yio.trade.mvp.presenter.WebPresenter;
 import com.yio.trade.utils.UIUtils;
 import com.yio.trade.utils.WebViewClient;
 import com.yio.trade.widgets.CustomWebView;
@@ -315,7 +312,7 @@ public class AdverActivity extends BaseActivity<AdverPresenter> implements Adver
                 }
                 webView.uploadMessageArr = null;
                 break;
-            case CustomWebView.FILECHOOSER_RESULTCODE:
+            case CustomWebView.FILECHOOSER_RESULT_CODE:
                 if (null == webView.uploadMessage)
                     return;
                 // Use MainActivity.RESULT_OK if you're implementing WebView inside Fragment

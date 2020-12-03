@@ -47,13 +47,14 @@ public class CustomWebView extends WebView {
     public ValueCallback<Uri> uploadMessage;
     public ValueCallback<Uri[]> uploadMessageArr;
     public static final int REQUEST_SELECT_FILE = 100;
-    public final static int FILECHOOSER_RESULTCODE = 101;
+    public final static int FILECHOOSER_RESULT_CODE = 101;
     private final static int READ_EXTERNAL_STORAGEREQUESTCODE = 10;
 
     private WebProgressView progressView;//进度条
     private Context context;
     private Activity activity;
     private AppJs appJs;
+    public static final String IMAGE_CHOOSER = "Image Chooser";
 
     public CustomWebView(Context context) {
         this(context, null);
@@ -195,102 +196,61 @@ public class CustomWebView extends WebView {
             }
         }
 
+        // For Android >= 5.0
         @Override
         public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    //没有权限则申请权限
-//                        choosefiletype = 2;
-//                        filePathCallbacktwo = filePathCallback;
-//                        fileChooserParamstwo = fileChooserParams;
-                    ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_EXTERNAL_STORAGEREQUESTCODE);
-                    return false;
-                } else {
-                    return fileTwo(filePathCallback, fileChooserParams);
-                }
-            } else {
-                //小于6.0，不用申请权限，直接执行
-                return fileTwo(filePathCallback, fileChooserParams);
-            }
+            return CustomWebView.this.onShowFileChooser(filePathCallback);
         }
 
+        // For Android < 3.0
         public void openFileChooser(ValueCallback<Uri> uploadMsg) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    //没有权限则申请权限
-//                        choosefiletype =1;
-//                        uploadMsgone = uploadMsg;
-//                        sone = "File Chooser";
-                    ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_EXTERNAL_STORAGEREQUESTCODE);
-                } else {
-                    fileone(uploadMsg, "File Chooser");
-                }
-            } else {
-                //小于6.0，不用申请权限，直接执行
-                fileone(uploadMsg, "File Chooser");
-            }
-
+            selectImageForOld(uploadMsg, IMAGE_CHOOSER);
         }
 
+        // For Android  >= 3.0
         public void openFileChooser(ValueCallback uploadMsg, String acceptType) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    //没有权限则申请权限
-//                        choosefiletype =1;
-//                        uploadMsgone = uploadMsg;
-//                        sone = "File Browser";
-                    ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_EXTERNAL_STORAGEREQUESTCODE);
-                } else {
-                    fileone(uploadMsg, "File Browser");
-                }
-            } else {
-                //小于6.0，不用申请权限，直接执行
-                fileone(uploadMsg, "File Browser");
-            }
-
+            selectImageForOld(uploadMsg, IMAGE_CHOOSER);
         }
 
-        //For Android 4.1 only
+        //For Android  >= 4.1
         public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    //没有权限则申请权限
-//                        choosefiletype =1;
-//                        uploadMsgone = uploadMsg;
-//                        sone = "File Browser";
-                    ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_EXTERNAL_STORAGEREQUESTCODE);
-                } else {
-                    fileone(uploadMsg, "File Browser");
-                }
-            } else {
-                //小于6.0，不用申请权限，直接执行
-                fileone(uploadMsg, "File Browser");
-            }
-
+            selectImageForOld(uploadMsg, IMAGE_CHOOSER);
         }
 
     }
 
-    private void fileone(ValueCallback<Uri> uploadMsg, String s) {
+    private boolean onShowFileChooser(ValueCallback<Uri[]> filePathCallback) {
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            //没有权限则申请权限
+//                        choosefiletype = 2;
+//                        filePathCallbacktwo = filePathCallback;
+//                        fileChooserParamstwo = fileChooserParams;
+            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_EXTERNAL_STORAGEREQUESTCODE);
+            return false;
+        } else {
+            return selectImageForLollipop(filePathCallback);
+        }
+    }
+
+    private void selectImageForOld(ValueCallback<Uri> uploadMsg, String title) {
         uploadMessage = uploadMsg;
         Intent i = new Intent(Intent.ACTION_GET_CONTENT);
         i.addCategory(Intent.CATEGORY_OPENABLE);
         i.setType("image/*");
-        activity.startActivityForResult(Intent.createChooser(i, s), FILECHOOSER_RESULTCODE);
+        activity.startActivityForResult(Intent.createChooser(i, title), FILECHOOSER_RESULT_CODE);
     }
 
-    private boolean fileTwo(ValueCallback<Uri[]> filePathCallback, WebChromeClient.FileChooserParams fileChooserParams) {
+    public boolean selectImageForLollipop(ValueCallback<Uri[]> filePathCallback) {
         if (uploadMessageArr != null) {
             uploadMessageArr.onReceiveValue(null);
             uploadMessageArr = null;
         }
         uploadMessageArr = filePathCallback;
         try {
-            Intent intent = null;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                intent = fileChooserParams.createIntent();
-            }
-            activity.startActivityForResult(intent, REQUEST_SELECT_FILE);
+            Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+            i.addCategory(Intent.CATEGORY_OPENABLE);
+            i.setType("image/*");
+            activity.startActivityForResult(Intent.createChooser(i, IMAGE_CHOOSER), REQUEST_SELECT_FILE);
         } catch (ActivityNotFoundException e) {
             uploadMessageArr = null;
             Toast.makeText(getContext(), "Cannot Open File Chooser", Toast.LENGTH_LONG).show();
@@ -365,5 +325,9 @@ public class CustomWebView extends WebView {
 
     public void setSelectFile(File file) {
         appJs.setSelectFile(file);
+    }
+
+    public void uploadImage(File file) {
+        appJs.uploadImage(file);
     }
 }

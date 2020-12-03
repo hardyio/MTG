@@ -24,6 +24,7 @@ import per.goweii.anylayer.Layer;
 
 import com.yio.mtg.trade.R;
 import com.yio.trade.utils.RxPhotoTool;
+
 import timber.log.Timber;
 
 public class ChooseImageDialog {
