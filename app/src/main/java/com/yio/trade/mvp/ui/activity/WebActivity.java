@@ -307,9 +307,7 @@ public class WebActivity extends BaseActivity<WebPresenter> implements WebContra
     }
 
     public void selectImage() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            webView.selectImageForLollipop(null);
-        }
+        webView.onShowFileChooser(null);
     }
 
     @Override

@@ -219,7 +219,7 @@ public class CustomWebView extends WebView {
 
     }
 
-    private boolean onShowFileChooser(ValueCallback<Uri[]> filePathCallback) {
+    public boolean onShowFileChooser(ValueCallback<Uri[]> filePathCallback) {
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             //没有权限则申请权限
 //                        choosefiletype = 2;
@@ -240,7 +240,7 @@ public class CustomWebView extends WebView {
         activity.startActivityForResult(Intent.createChooser(i, title), FILECHOOSER_RESULT_CODE);
     }
 
-    public boolean selectImageForLollipop(ValueCallback<Uri[]> filePathCallback) {
+    private boolean selectImageForLollipop(ValueCallback<Uri[]> filePathCallback) {
         if (uploadMessageArr != null) {
             uploadMessageArr.onReceiveValue(null);
             uploadMessageArr = null;
